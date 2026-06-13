@@ -48,3 +48,63 @@ id = "mxuuIqN3JZmyMigF2m7L6"
 uri = "file://artifacts/glimr/public/drop-ins/avatar-08.png"
 type = "image"
 title = "marble-sculptural-3d-portrait"
+
+[[generated]]
+id = "0o7aHYDJn7jiY7_q-RuzC"
+uri = "file://artifacts/glimr/public/family/hero.png"
+type = "image"
+title = "grandmother-granddaughter-warm-hero"
+
+[[generated]]
+id = "QP5QQOBwvDCszqvqrZ3Df"
+uri = "file://artifacts/glimr/public/family/recording.png"
+type = "image"
+title = "man-recording-message-warm"
+
+[[generated]]
+id = "APFmP29TC86Kw-y3NrDSn"
+uri = "file://artifacts/glimr/public/family/gathering.png"
+type = "image"
+title = "family-gathering-celebration-warm"
+
+[[generated]]
+id = "dzMgZ1xv7EpVz61luZ0dX"
+uri = "file://artifacts/glimr/public/family/watching.png"
+type = "image"
+title = "hands-holding-phone-video-warm"
+
+[[generated]]
+id = "hSV6DrQYnQ2KgwTWX_RTZ"
+uri = "file://artifacts/glimr/public/moments/birthday.png"
+type = "image"
+title = "birthday-candles"
+
+[[generated]]
+id = "pfWSMgRo9tRvnCqOYtgTe"
+uri = "file://artifacts/glimr/public/moments/anniversary.png"
+type = "image"
+title = "anniversary-flowers"
+
+[[generated]]
+id = "vMeyqCFJArPBpJzs-ozcT"
+uri = "file://artifacts/glimr/public/moments/farewell.png"
+type = "image"
+title = "farewell-airplane-sunset"
+
+[[generated]]
+id = "2yLtAKTe-WPcmiUIri_1m"
+uri = "file://artifacts/glimr/public/moments/graduation.png"
+type = "image"
+title = "graduation-family"
+
+[[generated]]
+id = "NUT5ZO9_qYzfP5Pxg-LgK"
+uri = "file://artifacts/glimr/public/moments/lovenote.png"
+type = "image"
+title = "love-note-couple"
+
+[[generated]]
+id = "hn8XT3PjaohhZDTirtlb8"
+uri = "file://artifacts/glimr/public/moments/thankyou.png"
+type = "image"
+title = "thank-you-note"

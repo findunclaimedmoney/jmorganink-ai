@@ -1,140 +1,251 @@
 import React, { useState } from 'react';
+import { Link } from 'wouter';
 import { useStudio } from '@/studio/StudioContext';
 import StudioControlPanel from '@/components/StudioControlPanel';
 
+const MOMENTS = [
+  {
+    href: '/features/magic-recap',
+    label: 'Magic Recap',
+    moment: 'So they feel it even with the sound off.',
+    desc: 'Every Glimr auto-generates a memory card — beautiful enough to screenshot and keep forever.',
+  },
+  {
+    href: '/features/time-lock',
+    label: 'Time-Lock',
+    moment: 'The first thing they see when they wake up.',
+    desc: "Set your Glimr to unlock at midnight on their birthday. No peeking.",
+  },
+  {
+    href: '/features/drop-ins',
+    label: 'Drop-Ins',
+    moment: 'Make the strip feel like theirs.',
+    desc: 'Add a portrait into your Booth frame. Editorial, cinematic, or 3D — your choice.',
+  },
+  {
+    href: '/features/filter-mode',
+    label: 'Filter Mode',
+    moment: 'Because how it looks changes how it feels.',
+    desc: 'Noir. Cinema. Vivid. Colour-grade your recording before you hit stop.',
+  },
+  {
+    href: '/features/sms-delivery',
+    label: 'SMS Delivery',
+    moment: 'Land in their inbox like a letter, not a link.',
+    desc: 'Rich iMessage preview — thumbnail, your name, tap to open. No app needed.',
+  },
+  {
+    href: '/features/booth-premium',
+    label: 'Booth Premium',
+    moment: 'The strip they actually frame.',
+    desc: '4 frames. Your theme. Your QR code. Printed or downloaded — it\'s a keepsake.',
+  },
+];
+
 export default function StudioPage() {
   const engine = useStudio();
-
   const [script, setScript] = useState('');
-  const [is4KEnabled, setIs4KEnabled] = useState(false);
-  const [systemLogs, setSystemLogs] = useState<string[]>(['System Initialized']);
+  const [systemLogs, setSystemLogs] = useState<string[]>([]);
   const [recordingStatus, setRecordingStatus] = useState<'IDLE' | 'RECORDING' | 'ERROR'>('IDLE');
+  const [is4K, setIs4K] = useState(false);
 
   const addLog = (msg: string) =>
-    setSystemLogs((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 5));
-
-  const handleRewrite = () => {
-    addLog('Initiating AI Ghostwriter...');
-    setTimeout(() => addLog('Ghostwriter process complete.'), 800);
-  };
+    setSystemLogs((prev) => [`${msg}`, ...prev].slice(0, 4));
 
   const handleRecordToggle = async () => {
     try {
       if (recordingStatus === 'IDLE') {
-        addLog('Hardware warming up...');
-        await engine.initHardware(
-          is4KEnabled
-            ? { video: { width: 3840, height: 2160 }, audio: true }
-            : { video: true, audio: true }
-        );
+        await engine.initHardware(is4K ? { video: { width: 3840, height: 2160 }, audio: true } : { video: true, audio: true });
         engine.record();
         setRecordingStatus('RECORDING');
-        addLog('Engine: RECORDING started.');
+        addLog('Recording started');
       } else {
-        const videoUrl = await engine.stopAndSave();
+        const url = await engine.stopAndSave();
         setRecordingStatus('IDLE');
-        addLog(`Engine: RECORDING saved. Asset: ${videoUrl.substring(0, 28)}...`);
+        addLog('Saved — ready to share');
+        void url;
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      addLog(`CRITICAL: ${msg}`);
+      addLog(`Could not access camera: ${msg}`);
       setRecordingStatus('ERROR');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-8 font-sans">
-      <header className="mb-10">
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-8 bg-orange-500 rounded-full" />
-          <h1 className="text-4xl font-extrabold tracking-tight">Glimr Infrastructure</h1>
-        </div>
-        <div className="text-sm text-gray-500 mt-2 ml-5">v2.0.4 | Engine: Active | Studio Mode</div>
-      </header>
+    <div className="min-h-screen bg-[#0d0b09] text-white font-sans">
 
-      {/* ScriptLens AI Ghostwriter */}
-      <section className="bg-gray-900 p-6 rounded-xl border border-gray-800 mb-8 shadow-2xl">
-        <h2 className="text-xl font-semibold mb-4 text-orange-400">ScriptLens™ AI Ghostwriter</h2>
-        <textarea
-          className="w-full h-40 bg-black border border-gray-700 rounded-lg p-4 mb-4 text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all resize-none"
-          placeholder="Pour your heart out..."
-          value={script}
-          onChange={(e) => setScript(e.target.value)}
-        />
-        <button
-          onClick={handleRewrite}
-          className="bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 active:scale-95"
-        >
-          Magic Rewrite
-        </button>
+      {/* Hero */}
+      <section className="relative px-8 pt-20 pb-16 max-w-5xl mx-auto">
+        <div className="mb-3 flex items-center gap-3">
+          <div className="h-px w-8 bg-orange-500" />
+          <span className="text-[11px] tracking-[3px] text-orange-500 uppercase">Memory Studio</span>
+        </div>
+        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.08] mb-6 max-w-3xl">
+          The studio for moments<br />
+          <span className="text-orange-400">worth keeping.</span>
+        </h1>
+        <p className="text-[#8a8070] text-lg max-w-xl leading-relaxed mb-10">
+          Glimr is where you record the things you need to get right — the birthday message, 
+          the farewell, the proposal, the apology. Then makes sure it lands exactly as you meant it.
+        </p>
+        <div className="flex gap-4">
+          <Link href="/teleprompter">
+            <button className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-xl transition-colors">
+              Open Teleprompter
+            </button>
+          </Link>
+          <Link href="/booth">
+            <button className="px-6 py-3 border border-[#2a2820] text-[#8a8070] hover:text-white hover:border-[#4a4840] text-sm font-semibold rounded-xl transition-colors">
+              Booth Mode
+            </button>
+          </Link>
+        </div>
       </section>
 
-      {/* Studio Control Panel */}
-      <div className="mb-8">
-        <StudioControlPanel />
-      </div>
+      {/* Divider */}
+      <div className="h-px bg-[#1c1a16] mx-8" />
 
-      {/* Active Infrastructure */}
-      <section className="bg-gray-900 p-6 rounded-xl border border-gray-800 shadow-2xl">
-        <h2 className="text-xl font-semibold mb-6 text-blue-400">Active Infrastructure</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Time-Lock Control */}
+      {/* Quick record — the core action */}
+      <section className="px-8 py-14 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* Script */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-400">Time-Lock™ Configuration</label>
-            <input
-              type="text"
-              className="bg-black border border-gray-700 p-3 rounded-lg w-full text-white focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="dd/mm/yyyy --:--"
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight mb-1">Write your words first.</h2>
+              <p className="text-[#6a6055] text-sm leading-relaxed">
+                The best Glimrs are the ones where you knew exactly what you wanted to say. 
+                Write it out. Read it back. Then record it.
+              </p>
+            </div>
+            <textarea
+              className="w-full h-44 bg-[#0a0906] border border-[#1e1c18] rounded-xl px-4 py-3.5 text-white text-sm leading-relaxed outline-none focus:border-orange-600/50 transition-colors resize-none placeholder-[#3a3830]"
+              placeholder="What do you want them to remember?"
+              value={script}
+              onChange={(e) => setScript(e.target.value)}
             />
-            <button className="bg-blue-700 hover:bg-blue-600 w-full py-3 rounded-lg font-bold transition-all">
-              Secure Lock
-            </button>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={is4K}
+                  onChange={() => setIs4K(!is4K)}
+                  className="accent-orange-500 w-4 h-4"
+                />
+                <span className="text-xs text-[#5a5850]">4K quality</span>
+              </label>
+            </div>
           </div>
 
-          {/* Booth Premium Controls */}
+          {/* Record */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-400">Booth System Override</label>
-            <div className="flex items-center space-x-3 bg-black p-4 rounded-lg border border-gray-800">
-              <input
-                type="checkbox"
-                checked={is4KEnabled}
-                onChange={() => setIs4KEnabled(!is4KEnabled)}
-                className="w-5 h-5 accent-blue-500"
-              />
-              <span>Enable 4K Ultra Strips</span>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight mb-1">Then say it.</h2>
+              <p className="text-[#6a6055] text-sm leading-relaxed">
+                One take or ten — the engine holds the stream until you decide it's right. 
+                Stop when you mean it.
+              </p>
             </div>
+
             <button
               onClick={handleRecordToggle}
-              className={`w-full py-3 rounded-lg font-bold transition-all transform hover:scale-105 active:scale-95 ${
+              className={`w-full py-5 rounded-xl font-bold text-base tracking-wide transition-all ${
                 recordingStatus === 'RECORDING'
-                  ? 'bg-red-600 hover:bg-red-500 animate-pulse'
+                  ? 'bg-red-700 hover:bg-red-600 text-white'
                   : recordingStatus === 'ERROR'
-                  ? 'bg-yellow-700 hover:bg-yellow-600'
-                  : 'bg-green-700 hover:bg-green-600'
+                  ? 'bg-[#1a1815] border border-[#2a2820] text-[#6a6055] hover:border-orange-700'
+                  : 'bg-orange-600 hover:bg-orange-500 text-white'
               }`}
             >
               {recordingStatus === 'RECORDING'
-                ? 'Stop Engine'
+                ? 'Stop — Save this take'
                 : recordingStatus === 'ERROR'
-                ? 'Retry Capture'
-                : 'Initiate Capture'}
+                ? 'Try again'
+                : 'Record a Glimr'}
             </button>
+
+            {/* Live log */}
+            {systemLogs.length > 0 && (
+              <div className="space-y-1">
+                {systemLogs.map((log, i) => (
+                  <p
+                    key={i}
+                    style={{ opacity: Math.max(0.25, 1 - i * 0.28) }}
+                    className="text-xs text-[#5a5850] font-mono"
+                  >
+                    {log}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {recordingStatus === 'RECORDING' && (
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-xs text-red-400 font-mono tracking-widest">Recording</span>
+              </div>
+            )}
           </div>
         </div>
+      </section>
 
-        {/* System Logs */}
-        <div className="mt-8 bg-black p-4 rounded border border-gray-800 font-mono text-xs text-green-500">
-          <h4 className="mb-2 border-b border-gray-800 pb-2 text-green-400 font-bold">
-            System Diagnostics
-          </h4>
-          {systemLogs.map((log, i) => (
-            <div key={i} style={{ opacity: 1 - i * 0.15 }} className="leading-6">
-              {log}
-            </div>
+      {/* Divider */}
+      <div className="h-px bg-[#1c1a16] mx-8" />
+
+      {/* Studio Control Panel */}
+      <section className="px-8 py-10 max-w-5xl mx-auto">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold tracking-tight mb-1">Studio controls.</h2>
+          <p className="text-[#6a6055] text-sm">Camera, filters, and engine state — all in one place.</p>
+        </div>
+        <StudioControlPanel />
+      </section>
+
+      {/* Divider */}
+      <div className="h-px bg-[#1c1a16] mx-8" />
+
+      {/* Feature moments */}
+      <section className="px-8 py-16 max-w-5xl mx-auto">
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-px w-8 bg-orange-500" />
+            <span className="text-[11px] tracking-[3px] text-orange-500 uppercase">Every feature has a purpose</span>
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight">Built around real moments.</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {MOMENTS.map((m) => (
+            <Link key={m.href} href={m.href}>
+              <div className="group h-full bg-[#110f0c] border border-[#1e1c18] rounded-2xl p-6 flex flex-col gap-3 hover:border-orange-600/40 hover:bg-[#141210] transition-all cursor-pointer">
+                <div className="text-[10px] tracking-[2px] text-[#4a4840] uppercase font-semibold">
+                  {m.label}
+                </div>
+                <h3 className="text-white font-semibold text-base leading-snug">{m.moment}</h3>
+                <p className="text-[#5a5850] text-sm leading-relaxed flex-1">{m.desc}</p>
+                <span className="text-[11px] text-orange-600 group-hover:text-orange-400 transition-colors font-medium">
+                  Open →
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
       </section>
+
+      {/* Bottom statement */}
+      <section className="px-8 pb-20 max-w-5xl mx-auto">
+        <div className="bg-[#110f0c] border border-[#1e1c18] rounded-2xl p-10 text-center">
+          <p className="text-[#4a4840] text-[11px] tracking-[3px] uppercase mb-4">Why Glimr exists</p>
+          <blockquote className="text-2xl md:text-3xl font-bold text-white leading-tight max-w-2xl mx-auto">
+            "Because some things shouldn't be said over a text message."
+          </blockquote>
+          <p className="text-[#5a5850] mt-5 max-w-lg mx-auto text-sm leading-relaxed">
+            Glimr is the gap between a voice note and a video production. 
+            Human enough to feel real. Professional enough to last.
+          </p>
+        </div>
+      </section>
+
     </div>
   );
 }

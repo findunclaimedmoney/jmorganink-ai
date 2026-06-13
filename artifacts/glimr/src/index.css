@@ -101,34 +101,34 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 222 47% 4%;
-  --foreground: 210 40% 96%;
-  --border: 217 33% 17%;
-  --card: 222 47% 6%;
-  --card-foreground: 210 40% 96%;
-  --card-border: 217 33% 15%;
-  --sidebar: 222 47% 5%;
+  --background: 24 30% 5%;
+  --foreground: 36 33% 95%;
+  --border: 28 16% 16%;
+  --card: 26 26% 7%;
+  --card-foreground: 36 33% 95%;
+  --card-border: 28 16% 15%;
+  --sidebar: 24 28% 6%;
   --sidebar-foreground: 210 40% 92%;
-  --sidebar-border: 217 33% 14%;
+  --sidebar-border: 28 16% 14%;
   --sidebar-primary: 25 95% 53%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 217 33% 12%;
   --sidebar-accent-foreground: 210 40% 90%;
   --sidebar-ring: 25 95% 53%;
-  --popover: 222 47% 6%;
+  --popover: 26 26% 7%;
   --popover-foreground: 210 40% 96%;
   --popover-border: 217 33% 15%;
   --primary: 25 95% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 217 33% 12%;
+  --secondary: 28 18% 13%;
   --secondary-foreground: 210 40% 92%;
-  --muted: 217 33% 11%;
-  --muted-foreground: 215 20% 55%;
+  --muted: 28 18% 12%;
+  --muted-foreground: 30 14% 62%;
   --accent: 213 94% 68%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
-  --input: 217 33% 20%;
+  --input: 28 16% 18%;
   --ring: 25 95% 53%;
   --chart-1: 25 95% 53%;
   --chart-2: 213 94% 68%;
@@ -137,7 +137,7 @@
   --chart-5: 0 72% 51%;
 
   --app-font-sans: 'Inter', system-ui, sans-serif;
-  --app-font-serif: Georgia, serif;
+  --app-font-serif: 'Fraunces', Georgia, serif;
   --app-font-mono: 'Menlo', 'Consolas', monospace;
   --radius: 0.5rem;
 
@@ -168,34 +168,34 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 222 47% 4%;
-  --foreground: 210 40% 96%;
-  --border: 217 33% 17%;
-  --card: 222 47% 6%;
-  --card-foreground: 210 40% 96%;
-  --card-border: 217 33% 15%;
-  --sidebar: 222 47% 5%;
+  --background: 24 30% 5%;
+  --foreground: 36 33% 95%;
+  --border: 28 16% 16%;
+  --card: 26 26% 7%;
+  --card-foreground: 36 33% 95%;
+  --card-border: 28 16% 15%;
+  --sidebar: 24 28% 6%;
   --sidebar-foreground: 210 40% 92%;
-  --sidebar-border: 217 33% 14%;
+  --sidebar-border: 28 16% 14%;
   --sidebar-primary: 25 95% 53%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 217 33% 12%;
   --sidebar-accent-foreground: 210 40% 90%;
   --sidebar-ring: 25 95% 53%;
-  --popover: 222 47% 6%;
+  --popover: 26 26% 7%;
   --popover-foreground: 210 40% 96%;
   --popover-border: 217 33% 15%;
   --primary: 25 95% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 217 33% 12%;
+  --secondary: 28 18% 13%;
   --secondary-foreground: 210 40% 92%;
-  --muted: 217 33% 11%;
-  --muted-foreground: 215 20% 55%;
+  --muted: 28 18% 12%;
+  --muted-foreground: 30 14% 62%;
   --accent: 213 94% 68%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
-  --input: 217 33% 20%;
+  --input: 28 16% 18%;
   --ring: 25 95% 53%;
   --chart-1: 25 95% 53%;
   --chart-2: 213 94% 68%;
@@ -226,14 +226,14 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: hsl(222 47% 4%);
+    background: hsl(24 30% 5%);
   }
   ::-webkit-scrollbar-thumb {
-    background: hsl(217 33% 20%);
+    background: hsl(28 16% 22%);
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(217 33% 28%);
+    background: hsl(28 16% 30%);
   }
 }
 
