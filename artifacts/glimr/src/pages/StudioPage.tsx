@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStudio } from '@/studio/StudioContext';
+import StudioControlPanel from '@/components/StudioControlPanel';
 
 export default function StudioPage() {
   const engine = useStudio();
@@ -67,6 +68,11 @@ export default function StudioPage() {
           Magic Rewrite
         </button>
       </section>
+
+      {/* Studio Control Panel */}
+      <div className="mb-8">
+        <StudioControlPanel />
+      </div>
 
       {/* Active Infrastructure */}
       <section className="bg-gray-900 p-6 rounded-xl border border-gray-800 shadow-2xl">
