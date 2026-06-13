@@ -1,0 +1,35 @@
+/* Powered by LensFlow | Architect: Gemini AI */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100 font-sans;
+  }
+
+  /* Custom Scrollbar for the Powerhouse Look */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-black;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-800 rounded-full hover:bg-gray-700;
+  }
+}
+
+@layer components {
+  .studio-panel {
+    @apply bg-gray-900 border border-gray-800 rounded-xl shadow-2xl p-6;
+  }
+  
+  .btn-primary {
+    @apply bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all;
+  }
+}
