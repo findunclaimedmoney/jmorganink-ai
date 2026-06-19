@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "KWObs5_lXz5dIX1FD7sz6"
@@ -120,3 +119,9 @@ id = "IL-hwVYmFUrM5Bx7VMxvm"
 uri = "file://artifacts/glimr/public/light-leak-bg.png"
 type = "image"
 title = "Warm light leak background"
+
+[[outputs]]
+id = "7D1S3OguPzzP5KldYUnpB"
+uri = "file://artifacts/missingcash/public/ellie-email.txt"
+type = "text"
+title = "Email to Ellie — Stratton Integration"
