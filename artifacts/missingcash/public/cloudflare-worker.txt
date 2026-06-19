@@ -4,7 +4,7 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request) {
   const url = new URL(request.url)
-  const targetUrl = 'https://code-verification-suite-1.replit.app' + url.pathname + url.search
+  const targetUrl = 'https://code-verification-suite-1.replit.app/missingcash' + url.pathname + url.search
   return fetch(targetUrl, {
     method: request.method,
     headers: request.headers,
