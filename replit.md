@@ -31,7 +31,7 @@ An Australian unclaimed-money search service: helps people find money held by th
   - Mia chat route: `POST /api/mia/chat` (streaming SSE) — built
   - Mia voice route: `POST /api/mia/tts` (ElevenLabs TTS → audio/mpeg) — built
   - Email alerts route needed: `POST /api/alerts/subscribe`
-  - Finance enquiry route needed: `POST /api/finance/enquiry`
+  - Finance enquiry route: `POST /api/finance/enquiry` — saves to DB and emails the lead to admin@missingcash.com.au via Resend (built)
 - Static assets (PDFs, videos, images): `artifacts/missingcash/public/`
 
 ## Architecture decisions
@@ -63,6 +63,7 @@ _Populate as you build — explicit user instructions worth remembering across s
 - **ElevenLabs** — Mia's voice. Her cloned voice is the one literally named "Mia" (category `generated`, id `x3PfG9wL6FOEApZ1VJ9H`), set as `ELEVENLABS_VOICE_ID` (voice IDs are not secret; `ELEVENLABS_API_KEY` is the secret). TTS route: `POST /api/mia/tts` ({text}) → `audio/mpeg`, model `eleven_turbo_v2_5`. Frontend plays it after each Mia reply, with a voice on/off toggle in the chat header (persisted to localStorage).
 - **HeyGen** — avatar id `05f1da4dc12744c087dace9e0651a6e0` (this is a HeyGen id, NOT an ElevenLabs voice id). Talking-avatar integration not yet wired.
 - **OpenAI** — `mia.ts` uses `gpt-4o-mini` via a dynamic `import("openai")` when `OPENAI_API_KEY` is set; otherwise Mia streams the knowledge fallback. The `openai` package must stay installed — api-server typecheck breaks without it even though the import is dynamic.
+- **Resend** — finance enquiry email notifications. Leads are sent FROM the verified `lensflow.com.au` domain (sender name "MissingCash Enquiries", `leads@lensflow.com.au`) TO `admin@missingcash.com.au`, with `replyTo` = the customer's email. `RESEND_API_KEY` is the secret. NOTE: `missingcash.com.au` is NOT verified in Resend — to send from a branded `@missingcash.com.au` address later, add and verify that domain in Resend first. The send lives in `artifacts/api-server/src/routes/finance.ts`; user input is HTML-escaped, and a send failure is logged but does not fail the request (the lead is still saved to the DB).
 
 ## Gotchas
 

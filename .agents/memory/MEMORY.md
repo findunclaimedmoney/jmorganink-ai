@@ -1,1 +1,2 @@
-- [Base-path asset refs](base-path-assets.md) — artifacts served under a non-root path (e.g. /centspick/) must prefix public assets with import.meta.env.BASE_URL, not root-relative /images or /Logo.
+- [Production DB provisioning](prod-db-provisioning.md) — dev DB works but prod throws `EAI_AGAIN helium`; prod DB was never wired, fix via createDatabase + Publish.
+- [api-server has no hot reload](api-server-no-hot-reload.md) — Express api-server only rebuilds on workflow restart; testing against a stale bundle looks like "the new code didn't run".

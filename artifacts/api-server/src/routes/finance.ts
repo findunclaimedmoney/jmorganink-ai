@@ -9,6 +9,15 @@ const router: IRouter = Router();
 const LEAD_FROM = "MissingCash Enquiries <leads@lensflow.com.au>";
 const LEAD_TO = "admin@missingcash.com.au";
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function formatLeadEmail(data: FinanceEnquiryBody, enquiryId: number) {
   const fullName = `${data.firstName} ${data.lastName}`;
   const monthly = data.estimatedMonthly ? `$${Math.round(data.estimatedMonthly).toLocaleString()}/mo` : "—";
@@ -38,8 +47,8 @@ function formatLeadEmail(data: FinanceEnquiryBody, enquiryId: number) {
           .map(
             ([label, value]) =>
               `<tr>
-                <td style="padding: 6px 16px 6px 0; font-weight: bold; vertical-align: top;">${label}</td>
-                <td style="padding: 6px 0;">${value}</td>
+                <td style="padding: 6px 16px 6px 0; font-weight: bold; vertical-align: top;">${escapeHtml(label)}</td>
+                <td style="padding: 6px 0;">${escapeHtml(value)}</td>
               </tr>`,
           )
           .join("")}
