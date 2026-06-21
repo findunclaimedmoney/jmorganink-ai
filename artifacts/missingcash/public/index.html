@@ -42,6 +42,9 @@ nav{background:var(--white);border-bottom:2px solid var(--bdr);
   letter-spacing:.06em;text-transform:uppercase;}
 .badge-gov{background:#e8f4e8;color:#2d7a2d;border:1px solid #b8dbb8;}
 .badge-secure{background:#e8f0ff;color:var(--blue);border:1px solid #b8cfff;}
+.nav-links{display:flex;gap:20px;align-items:center;}
+.nav-links a{color:var(--navy);font-size:13px;font-weight:700;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--blue);}
 .nav-search-btn{padding:9px 20px;border-radius:25px;border:none;cursor:pointer;
   background:linear-gradient(135deg,var(--blue),var(--blue2));
   color:#fff;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;
@@ -371,9 +374,10 @@ footer{background:var(--navy);padding:40px 20px;color:rgba(255,255,255,.5);}
       <div class="nav-abn">ABN 52 347 989 391</div>
     </div>
   </div>
-  <div class="nav-badges">
-    <span class="badge badge-gov">&#10003; Gov Databases</span>
-    <span class="badge badge-secure">&#128274; Secure</span>
+  <div class="nav-links">
+    <a href="finance.html">&#127968; Finance</a>
+    <a href="crypto.html">&#9881; Crypto</a>
+    <a href="contact.html">&#128222; Contact</a>
   </div>
   <button class="nav-search-btn" onclick="document.getElementById('scannerSection').scrollIntoView({behavior:'smooth'})">
     &#128269; Search Now
@@ -686,10 +690,11 @@ footer{background:var(--navy);padding:40px 20px;color:rgba(255,255,255,.5);}
         <div class="foot-abn">ABN 52 347 989 391 &nbsp;·&nbsp; missingcash.com.au</div>
       </div>
       <div class="foot-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Disclaimer</a>
-        <a href="mailto:admin@missingcash.com.au"><a href="mailto:admin@missingcash.com.au">Support</a></a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="finance.html">Finance</a>
+        <a href="crypto.html">Crypto</a>
+        <a href="contact.html">Contact</a>
+        <a href="mailto:admin@missingcash.com.au">Support</a>
       </div>
     </div>
     <div class="foot-legal">

@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat, open } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -24,39 +24,100 @@ const types = {
   '.xml': 'application/xml',
 };
 
+function resolvePath(reqUrl) {
+  let p = decodeURIComponent(new URL(reqUrl, 'http://x').pathname);
+  if (p === basePath || p === basePath + '/') {
+    p = '/index.html';
+  } else if (p.startsWith(basePath + '/')) {
+    p = p.slice(basePath.length);
+  } else if (p === '/') {
+    p = '/index.html';
+  }
+  if (p.endsWith('/')) p += 'index.html';
+  return p;
+}
+
 createServer(async (req, res) => {
   try {
-    let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-
-    if (p === basePath || p === basePath + '/') {
-      p = '/index.html';
-    } else if (p.startsWith(basePath + '/')) {
-      p = p.slice(basePath.length);
-    } else if (p === '/') {
-      p = '/index.html';
-    }
-
-    if (p.endsWith('/')) p += 'index.html';
-
+    const p = resolvePath(req.url);
     const file = join(root, normalize(p));
     if (!file.startsWith(root)) {
       res.writeHead(403).end('forbidden');
       return;
     }
 
+    const ext = extname(file).toLowerCase();
+    const contentType = types[ext] || 'application/octet-stream';
+
+    // Range request support (required for HTML5 video)
+    if (ext === '.mp4') {
+      let fileStat;
+      try {
+        fileStat = await stat(file);
+      } catch {
+        const htmlFile = file + '.html';
+        const body = await readFile(htmlFile);
+        res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
+        res.end(body);
+        return;
+      }
+
+      const fileSize = fileStat.size;
+      const rangeHeader = req.headers['range'];
+
+      if (rangeHeader) {
+        const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+        if (match) {
+          const start = parseInt(match[1], 10);
+          const end = match[2] ? parseInt(match[2], 10) : Math.min(start + 1024 * 1024 - 1, fileSize - 1);
+          const chunkSize = end - start + 1;
+
+          res.writeHead(206, {
+            'content-range': `bytes ${start}-${end}/${fileSize}`,
+            'accept-ranges': 'bytes',
+            'content-length': chunkSize,
+            'content-type': contentType,
+            'cache-control': 'no-cache',
+          });
+
+          const fh = await open(file, 'r');
+          try {
+            const buf = Buffer.allocUnsafe(chunkSize);
+            await fh.read(buf, 0, chunkSize, start);
+            res.end(buf);
+          } finally {
+            await fh.close();
+          }
+          return;
+        }
+      }
+
+      // No range — send full file
+      res.writeHead(200, {
+        'content-length': fileSize,
+        'content-type': contentType,
+        'accept-ranges': 'bytes',
+        'cache-control': 'no-cache',
+      });
+      res.end(await readFile(file));
+      return;
+    }
+
+    // Non-video files
     let body;
-    let contentType;
     try {
       body = await readFile(file);
-      contentType = types[extname(file).toLowerCase()] || 'application/octet-stream';
     } catch {
-      // Try appending .html for extensionless paths
       const htmlFile = file + '.html';
       body = await readFile(htmlFile);
-      contentType = 'text/html; charset=utf-8';
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
+      res.end(body);
+      return;
     }
+
     res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-cache' });
     res.end(body);
+
   } catch {
     res.writeHead(404, { 'content-type': 'text/plain' }).end('404 not found');
   }
