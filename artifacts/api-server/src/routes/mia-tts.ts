@@ -80,24 +80,4 @@ router.post("/mia/tts", rateLimit, async (req, res): Promise<void> => {
   }
 });
 
-router.get("/mia/voices", async (req, res): Promise<void> => {
-  const apiKey = process.env.ELEVENLABS_API_KEY;
-  if (!apiKey) {
-    res.status(503).json({ error: "Voice is not configured." });
-    return;
-  }
-  try {
-    const upstream = await fetch("https://api.elevenlabs.io/v1/voices", {
-      headers: { "xi-api-key": apiKey },
-    });
-    const json = (await upstream.json()) as { voices?: { voice_id: string; name: string; category: string }[] };
-    res.json(
-      (json.voices ?? []).map((v) => ({ id: v.voice_id, name: v.name, category: v.category })),
-    );
-  } catch (err) {
-    req.log.error({ err }, "Mia voices listing errored");
-    res.status(502).json({ error: "Could not list voices." });
-  }
-});
-
 export default router;

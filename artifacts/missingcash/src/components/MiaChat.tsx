@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Volume2 } from "lucide-react";
+import { X, Send, Volume2, VolumeX } from "lucide-react";
 
 interface Message {
   id: string;
@@ -44,6 +44,15 @@ function renderMessage(content: string) {
       );
     return <span key={i}>{part}</span>;
   });
+}
+
+function stripForSpeech(content: string): string {
+  return content
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\[(.+?)\]\((https?:\/\/.+?)\)/g, "$1")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function MiaAvatar({ size, active, showStatus = false }: { size: number; active: boolean; showStatus?: boolean }) {
@@ -174,6 +183,15 @@ export default function MiaChat() {
   const [streaming, setStreaming] = useState(false);
   const [unread, setUnread] = useState(false);
   const [videoOk, setVideoOk] = useState(true);
+  const [voiceOn, setVoiceOn] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    try { return localStorage.getItem("mia-voice") !== "off"; } catch { return true; }
+  });
+  const [speaking, setSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+  const speechIdRef = useRef(0);
+  const voiceOnRef = useRef(voiceOn);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -187,7 +205,86 @@ export default function MiaChat() {
     if (open) setTimeout(() => inputRef.current?.focus(), 100);
   }, [open]);
 
+  useEffect(() => {
+    voiceOnRef.current = voiceOn;
+    try { localStorage.setItem("mia-voice", voiceOn ? "on" : "off"); } catch { /* ignore */ }
+  }, [voiceOn]);
+
+  useEffect(() => () => {
+    speechIdRef.current += 1;
+    audioRef.current?.pause();
+    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+  }, []);
+
   const handleVideoUnavailable = useCallback(() => setVideoOk(false), []);
+
+  const stopSpeaking = useCallback(() => {
+    speechIdRef.current += 1;
+    const audio = audioRef.current;
+    if (audio) {
+      audio.onended = null;
+      audio.onerror = null;
+      audio.pause();
+    }
+    audioRef.current = null;
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+    setSpeaking(false);
+  }, []);
+
+  const speak = useCallback(async (text: string) => {
+    const clean = stripForSpeech(text);
+    if (!clean) return;
+
+    const myId = ++speechIdRef.current;
+
+    const prev = audioRef.current;
+    if (prev) {
+      prev.onended = null;
+      prev.onerror = null;
+      prev.pause();
+    }
+    audioRef.current = null;
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+
+    try {
+      const res = await fetch(`${BASE}/api/mia/tts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: clean.slice(0, 5000) }),
+      });
+      if (myId !== speechIdRef.current) return;
+      if (!res.ok) return;
+      const blob = await res.blob();
+      if (myId !== speechIdRef.current) return;
+
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audioUrlRef.current = url;
+      setSpeaking(true);
+
+      const cleanup = () => {
+        if (audioUrlRef.current === url) {
+          URL.revokeObjectURL(url);
+          audioUrlRef.current = null;
+        }
+        if (audioRef.current === audio) audioRef.current = null;
+        if (myId === speechIdRef.current) setSpeaking(false);
+      };
+      audio.onended = cleanup;
+      audio.onerror = cleanup;
+      await audio.play().catch(cleanup);
+    } catch {
+      if (myId === speechIdRef.current) setSpeaking(false);
+    }
+  }, []);
+
   const sendMessageRef = useRef<((text?: string) => void) | null>(null);
 
   const sendMessage = useCallback(
@@ -206,6 +303,7 @@ export default function MiaChat() {
 
       const controller = new AbortController();
       abortRef.current = controller;
+      let fullText = "";
 
       try {
         const res = await fetch(`${BASE}/api/mia/chat`, {
@@ -234,6 +332,7 @@ export default function MiaChat() {
             try {
               const payload = JSON.parse(line.slice(6)) as { content?: string; done?: boolean; error?: string };
               if (payload.content) {
+                fullText += payload.content;
                 setMessages((prev) =>
                   prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + payload.content } : m)),
                 );
@@ -249,6 +348,8 @@ export default function MiaChat() {
             } catch { /* ignore partial JSON */ }
           }
         }
+
+        if (voiceOnRef.current && fullText.trim()) void speak(fullText);
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
           setMessages((prev) =>
@@ -265,7 +366,7 @@ export default function MiaChat() {
         if (!open) setUnread(true);
       }
     },
-    [input, streaming, messages, open],
+    [input, streaming, messages, open, speak],
   );
 
   useEffect(() => { sendMessageRef.current = sendMessage; }, [sendMessage]);
@@ -326,15 +427,29 @@ export default function MiaChat() {
             className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-24px)] flex flex-col rounded-2xl overflow-hidden shadow-2xl shadow-black/60 border border-border bg-card"
           >
             <div className="flex items-center gap-3 px-4 py-3 bg-secondary border-b border-border shrink-0">
-              <MiaAvatar size={40} active={streaming} showStatus />
+              <MiaAvatar size={40} active={streaming || speaking} showStatus />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white">Mia</p>
                 <p className="text-[11px] text-primary">
-                  {streaming ? "typing…" : "MissingCash assistant"}
+                  {streaming ? "typing…" : speaking ? "speaking…" : "MissingCash assistant"}
                 </p>
               </div>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setVoiceOn((v) => {
+                    const next = !v;
+                    if (!next) stopSpeaking();
+                    return next;
+                  })
+                }
+                className="text-muted-foreground hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+                aria-label={voiceOn ? "Turn Mia's voice off" : "Turn Mia's voice on"}
+                title={voiceOn ? "Mia's voice: on" : "Mia's voice: off"}
+              >
+                {voiceOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+              </button>
+              <button
+                onClick={() => { stopSpeaking(); setOpen(false); }}
                 className="text-muted-foreground hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
                 aria-label="Close chat"
               >

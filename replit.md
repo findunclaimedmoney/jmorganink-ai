@@ -28,7 +28,8 @@ An Australian unclaimed-money search service: helps people find money held by th
   - SEO: `src/hooks/use-page-seo.ts` — sets title/description/keywords/OG/Twitter meta per page
   - Theme: navy `#061826` background, gold `#f5b942` primary — defined in `src/index.css` via `@theme`
 - API (Express 5, routed at `/api` via shared proxy): `artifacts/api-server/`
-  - Mia chat route needed: `POST /api/mia/chat` (streaming SSE)
+  - Mia chat route: `POST /api/mia/chat` (streaming SSE) — built
+  - Mia voice route: `POST /api/mia/tts` (ElevenLabs TTS → audio/mpeg) — built
   - Email alerts route needed: `POST /api/alerts/subscribe`
   - Finance enquiry route needed: `POST /api/finance/enquiry`
 - Static assets (PDFs, videos, images): `artifacts/missingcash/public/`
@@ -59,7 +60,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Integrations
 
-- **HeyGen** — Mia's voice ID: `05f1da4dc12744c087dace9e0651a6e0`
+- **ElevenLabs** — Mia's voice. Her cloned voice is the one literally named "Mia" (category `generated`, id `x3PfG9wL6FOEApZ1VJ9H`), set as `ELEVENLABS_VOICE_ID` (voice IDs are not secret; `ELEVENLABS_API_KEY` is the secret). TTS route: `POST /api/mia/tts` ({text}) → `audio/mpeg`, model `eleven_turbo_v2_5`. Frontend plays it after each Mia reply, with a voice on/off toggle in the chat header (persisted to localStorage).
+- **HeyGen** — avatar id `05f1da4dc12744c087dace9e0651a6e0` (this is a HeyGen id, NOT an ElevenLabs voice id). Talking-avatar integration not yet wired.
+- **OpenAI** — `mia.ts` uses `gpt-4o-mini` via a dynamic `import("openai")` when `OPENAI_API_KEY` is set; otherwise Mia streams the knowledge fallback. The `openai` package must stay installed — api-server typecheck breaks without it even though the import is dynamic.
 
 ## Gotchas
 
