@@ -27,7 +27,7 @@ export const MIA_SYSTEM_PROMPT = `You are Mia, the friendly AI assistant for Mis
 - Stratton Finance is one of Australia's leading and highest-rated finance brokers, with access to 40+ lenders to find competitive rates.
 - They help with: Car Finance (new, used, prestige), Personal Loans, Commercial/Business Finance, and Asset Finance.
 - Licensing & trust: ACL 364340, AFCA Member, FBAA Member. Fast approvals — often same day.
-- Finance Consultant: Erin Crofton. Phone: (08) 9446 9893. Based in Wanneroo, Perth, Western Australia.
+- Finance Consultant: Erin Crofton. Phone: 0432 280 181. Based in Wanneroo, Perth, Western Australia.
 - To get a quote, users can fill in the enquiry form on the Finance page, or go directly to strattonfinance.com.au/wanneroo. The enquiry is free with no obligation.
 - When someone asks about car loans, personal loans, finance, or Stratton, enthusiastically guide them to the Finance page and mention Erin Crofton and the free quote.
 
@@ -67,7 +67,7 @@ export const MIA_SYSTEM_PROMPT = `You are Mia, the friendly AI assistant for Mis
 
 ## Contact & support
 - Email: support@missingcash.com.au — the team typically replies within 1–2 business days.
-- For finance enquiries, use the Finance page form or call Erin Crofton on (08) 9446 9893.
+- For finance enquiries, use the Finance page form or call Erin Crofton on 0432 280 181.
 - ABN: 52 347 989 391.
 
 ## Pages on the website
@@ -94,7 +94,7 @@ export function getMiaFallback(messages: { role: string; content: string }[]): s
   const has = (...words: string[]) => words.some((w) => text.includes(w));
 
   if (has("stratton", "loan", "finance", "car", "vehicle", "borrow", "lend", "broker", "interest rate", "repayment")) {
-    return "For finance, we partner with Stratton Finance — one of Australia's leading brokers, with access to 40+ lenders for competitive rates. They handle car finance (new, used, prestige), personal loans, and commercial & asset finance, often with same-day approval. Your consultant is Erin Crofton in Wanneroo, Perth (ACL 364340, AFCA & FBAA member). For a free, no-obligation quote, use the form on our Finance page or call Erin on (08) 9446 9893.";
+    return "For finance, we partner with Stratton Finance — one of Australia's leading brokers, with access to 40+ lenders for competitive rates. They handle car finance (new, used, prestige), personal loans, and commercial & asset finance, often with same-day approval. Your consultant is Erin Crofton in Wanneroo, Perth (ACL 364340, AFCA & FBAA member). For a free, no-obligation quote, use the form on our Finance page or call Erin on 0432 280 181.";
   }
   if (has("crypto", "bitcoin", "wallet", "seed phrase", "exchange", "ledger")) {
     return "We help people understand how to recover lost or dormant cryptocurrency — old exchange accounts, forgotten seed phrases, or old hardware wallets. One important warning: never pay an upfront fee to anyone promising to recover your crypto, as that's a common scam. See our Lost Crypto page for guidance, and reach legitimate help via ASIC MoneySmart and AFCA.";
@@ -106,7 +106,7 @@ export function getMiaFallback(messages: { role: string; content: string }[]): s
     return "It's easy: on our homepage, enter your first and last name (optionally your state and birth year) and we'll scan national databases — the ATO, ASIC, state registers and more. You'll see any potential matches, then can use our guide to claim. Searching is 100% free and we don't store your details.";
   }
   if (has("contact", "support", "email", "phone", "help", "reach", "speak")) {
-    return "You can reach our team at support@missingcash.com.au (we usually reply within 1–2 business days) or via the Contact page form. For finance enquiries, use the Finance page form or call Erin Crofton at Stratton Finance on (08) 9446 9893.";
+    return "You can reach our team at support@missingcash.com.au (we usually reply within 1–2 business days) or via the Contact page form. For finance enquiries, use the Finance page form or call Erin Crofton at Stratton Finance on 0432 280 181.";
   }
   if (has("privacy", "data", "secure", "store", "personal information")) {
     return "Your privacy is protected — we don't store your search queries or personal data; everything is processed instantly. You can read the full details on our Privacy page, or email support@missingcash.com.au for any data request.";

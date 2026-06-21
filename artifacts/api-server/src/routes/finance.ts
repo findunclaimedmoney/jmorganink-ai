@@ -25,7 +25,7 @@ router.post("/finance/enquiry", async (req, res) => {
     res.status(201).json({ success: true, enquiryId: row.id });
   } catch (err) {
     req.log.error({ err }, "Failed to save finance enquiry");
-    res.status(500).json({ error: "Failed to submit enquiry. Please try again or call (08) 9446 9893." });
+    res.status(500).json({ error: "Failed to submit enquiry. Please try again or call 0432 280 181." });
   }
 });
 
