@@ -198,6 +198,18 @@ uri = "file://attached_assets/generated_images/bp-promo-story-v2.png"
 type = "image"
 title = "BP promo story sign up Stratton"
 
+[[generated]]
+id = "iVRlSPyMJjVJUfDIS3xxM"
+uri = "file://attached_assets/generated_images/bp-promo-social-v3.png"
+type = "image"
+title = "BP promo compliments from MissingCash square"
+
+[[generated]]
+id = "jFGzjsKNlVc7FWM6EIf71"
+uri = "file://attached_assets/generated_images/bp-promo-story-v3.png"
+type = "image"
+title = "BP promo compliments from MissingCash story"
+
 [[outputs]]
 id = "7D1S3OguPzzP5KldYUnpB"
 uri = "file://artifacts/missingcash/public/ellie-email.txt"
@@ -251,3 +263,15 @@ id = "ZaLTH627opPGlySckyQzL"
 uri = "file://attached_assets/generated_images/bp-promo-story-v2.png"
 type = "image"
 title = "Vertical story — Sign up today with Stratton Finance"
+
+[[outputs]]
+id = "cSbQPjJSkQ9SM3kxg2a_z"
+uri = "file://attached_assets/generated_images/bp-promo-social-v3.png"
+type = "image"
+title = "Square post — Compliments from MissingCash"
+
+[[outputs]]
+id = "5YozLtjdiZSCbvgEJb53c"
+uri = "file://attached_assets/generated_images/bp-promo-story-v3.png"
+type = "image"
+title = "Vertical story — Compliments from MissingCash"
