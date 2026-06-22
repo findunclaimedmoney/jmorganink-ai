@@ -139,6 +139,29 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Stratton Finance Partner Banner */}
+      <section className="py-6 border-b border-border/50">
+        <div className="container mx-auto px-4">
+          <a href="/finance" className="block max-w-3xl mx-auto">
+            <div className="rounded-2xl bg-white/5 border border-white/10 hover:border-primary/40 transition-all p-5 flex flex-col sm:flex-row items-center gap-5 group cursor-pointer">
+              <div className="bg-white rounded-xl px-5 py-3 flex-shrink-0 shadow-sm">
+                <img src="/stratton-logo.png" alt="Stratton Finance" className="h-9 w-auto" />
+              </div>
+              <div className="text-center sm:text-left flex-1">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-0.5">Finance Partner</p>
+                <p className="text-white font-bold text-base leading-snug">Need a car, personal or business loan?</p>
+                <p className="text-muted-foreground text-sm">Speak to our trusted broker — fast approvals, competitive rates.</p>
+              </div>
+              <div className="flex-shrink-0">
+                <span className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-bold px-5 py-2.5 rounded-full text-sm group-hover:bg-primary/90 transition-colors">
+                  Get Finance <ChevronRight className="w-4 h-4" />
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
       {/* Results Dialog */}
       <Dialog open={showResults} onOpenChange={setShowResults}>
         <DialogContent className="sm:max-w-2xl bg-card border-border p-0 overflow-hidden">
