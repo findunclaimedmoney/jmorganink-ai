@@ -92,7 +92,8 @@ function MiaAvatar({ size, active, showStatus = false }: { size: number; active:
         <img
           src={AVATAR}
           alt="Mia"
-          className="relative w-full h-full object-cover object-top"
+          className="relative w-full h-full object-cover"
+          style={{ objectPosition: "center 20%" }}
           onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
       </motion.div>
