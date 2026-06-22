@@ -234,6 +234,18 @@ uri = "file://attached_assets/generated_images/bp-promo-story-v5.png"
 type = "image"
 title = "BP promo receive from MissingCash story"
 
+[[generated]]
+id = "ag4A1pc7TNZ7IKCBW_vop"
+uri = "file://attached_assets/generated_images/bp-promo-social-final.png"
+type = "image"
+title = "BP promo final square"
+
+[[generated]]
+id = "PRVF6RP9fXGDSMwQvHqfF"
+uri = "file://attached_assets/generated_images/bp-promo-story-final.png"
+type = "image"
+title = "BP promo final story"
+
 [[outputs]]
 id = "7D1S3OguPzzP5KldYUnpB"
 uri = "file://artifacts/missingcash/public/ellie-email.txt"
@@ -321,5 +333,17 @@ title = "Square post — Receive from MissingCash"
 [[outputs]]
 id = "gcEaH6exEKqIFgoOQ8vwn"
 uri = "file://attached_assets/generated_images/bp-promo-story-v5.png"
+type = "image"
+title = "Vertical story — Receive from MissingCash"
+
+[[outputs]]
+id = "MmLOJQQWhbSNUgKegjSmy"
+uri = "file://attached_assets/generated_images/bp-promo-social-final.png"
+type = "image"
+title = "Square post — Receive from MissingCash"
+
+[[outputs]]
+id = "5Bp4ICS_H4ApHq7XCkZe-"
+uri = "file://attached_assets/generated_images/bp-promo-story-final.png"
 type = "image"
 title = "Vertical story — Receive from MissingCash"
