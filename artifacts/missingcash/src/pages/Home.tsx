@@ -145,23 +145,20 @@ export default function Home() {
           <a href="/finance" className="block max-w-3xl mx-auto">
             <div className="rounded-2xl bg-white/5 border border-white/10 hover:border-primary/40 transition-all p-5 flex flex-col sm:flex-row items-center gap-5 group cursor-pointer">
               {/* Left: logo + gift card stacked */}
-              <div className="flex-shrink-0 flex flex-col items-center gap-2">
+              <div className="flex-shrink-0 flex flex-col items-center gap-1">
                 <div className="bg-white rounded-xl px-5 py-3 shadow-sm">
                   <img src="/stratton-logo.png" alt="Stratton Finance" className="h-8 w-auto" />
                 </div>
-                <div className="relative">
-                  <img src="/fuel-gift-card.png" alt="$100 Fuel Gift Card" className="h-16 w-auto rounded-lg shadow-md" />
-                  <span className="absolute left-2 top-[10px] font-black text-white text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none">$100</span>
-                  <span className="absolute left-1 top-[34px] font-black text-yellow-400 text-base leading-none bg-[#0077b8] px-0.5">FUEL</span>
-                  <span className="absolute left-2 bottom-1 font-bold text-primary text-xs uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">MissingCash</span>
-                </div>
+                <span className="text-sm font-black text-white">$100</span>
+                <img src="/fuel-gift-card.png" alt="Fuel Gift Card" className="h-16 w-auto rounded-lg shadow-md" />
+                <span className="text-xs font-bold text-primary uppercase tracking-widest">MissingCash</span>
               </div>
               {/* Middle: text */}
               <div className="text-center sm:text-left flex-1 min-w-0">
                 <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-0.5">Finance Partner</p>
                 <p className="text-white font-bold text-base leading-snug">Need a car, personal or business loan?</p>
                 <p className="text-muted-foreground text-sm">Speak to our trusted broker — fast approvals, competitive rates.</p>
-                <p className="text-xs font-semibold text-primary mt-1">⚡ Sign up before end of financial year &amp; receive a $100 fuel voucher!</p>
+                <p className="text-xs font-semibold text-primary mt-1">⚡ Sign up before end of financial year — receive a fuel voucher!</p>
               </div>
               {/* Right: CTA */}
               <div className="flex-shrink-0">
