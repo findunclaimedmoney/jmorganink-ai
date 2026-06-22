@@ -151,7 +151,8 @@ export default function Home() {
                 </div>
                 <div className="relative">
                   <img src="/fuel-gift-card.png" alt="$100 Fuel Gift Card" className="h-16 w-auto rounded-lg shadow-md" />
-                  <span className="absolute left-2 top-0.5 font-black text-white text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none">$100</span>
+                  <span className="absolute left-2 top-[10px] font-black text-white text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-none">$100</span>
+                  <span className="absolute left-1 top-[34px] font-black text-yellow-400 text-base leading-none bg-[#0077b8] px-0.5">FUEL</span>
                   <span className="absolute left-2 bottom-1 font-bold text-primary text-xs uppercase tracking-widest drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">MissingCash</span>
                 </div>
               </div>
