@@ -443,3 +443,15 @@ id = "gV5_7lS6n8RtF4dhKueVX"
 uri = "file://attached_assets/generated_images/bp-promo-2026-story.png"
 type = "image"
 title = "Vertical story — 2026 modern"
+
+[[outputs]]
+id = "qlepHZlRe0w4HnMoytLvx"
+uri = "file://attached_assets/generated_images/branded-square-final.jpg"
+type = "image"
+title = "Square post — exact website colours & fonts"
+
+[[outputs]]
+id = "eI2qZhD5qylqluXaheKRW"
+uri = "file://attached_assets/generated_images/branded-story-final.jpg"
+type = "image"
+title = "Vertical story — exact website colours & fonts"

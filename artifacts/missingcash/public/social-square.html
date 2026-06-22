@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1080px;
+    background: #061826;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .card {
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+  }
+  .bp-logo {
+    width: 120px;
+    height: 120px;
+  }
+  .voucher {
+    font-family: 'Playfair Display', serif;
+    font-size: 96px;
+    font-weight: 900;
+    color: #f5b942;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 4px 24px rgba(245,185,66,0.4);
+  }
+  .fuel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .divider {
+    width: 300px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f5b942, transparent);
+  }
+  .cta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .receive {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #f5b942;
+    text-align: center;
+  }
+  .url {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: rgba(245,185,66,0.7);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="bp-logo" src="/bp-logo.svg" alt="BP" />
+    <div class="voucher">$100</div>
+    <div class="fuel">BP Fuel Voucher</div>
+    <div class="divider"></div>
+    <div class="cta">Sign up for finance today</div>
+    <div class="receive">Receive from MissingCash</div>
+    <div class="url">missingcash.com.au/finance</div>
+  </div>
+</body>
+</html>
