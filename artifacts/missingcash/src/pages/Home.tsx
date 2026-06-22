@@ -148,11 +148,11 @@ export default function Home() {
                 <div className="bg-white rounded-xl px-5 py-3 shadow-sm">
                   <img src="/stratton-logo.png" alt="Stratton Finance" className="h-8 w-auto" />
                 </div>
-                <div className="bg-[#007A33] rounded-2xl px-8 py-5 flex flex-col items-center gap-3 shadow-xl border-2 border-[#FFCD00] min-w-[160px]">
-                  <span className="font-black text-[#FFCD00] text-5xl leading-none tracking-tight" style={{fontStyle:'italic'}}>bp</span>
-                  <span className="font-black text-white text-5xl leading-none">$100</span>
-                  <div className="w-full h-px bg-white/30" />
-                  <span className="font-bold text-[#FFCD00] text-xs tracking-[0.2em] uppercase">MISSING CASH</span>
+                <div className="bg-white rounded-2xl px-8 py-5 flex flex-col items-center gap-3 shadow-xl border-2 border-[#007A33] min-w-[160px]">
+                  <img src="/bp-logo.svg" alt="BP" className="h-20 w-auto object-contain" />
+                  <span className="font-black text-[#007A33] text-5xl leading-none">$100</span>
+                  <div className="w-full h-px bg-[#007A33]/30" />
+                  <span className="font-bold text-[#007A33] text-xs tracking-[0.2em] uppercase">MISSING CASH</span>
                 </div>
               </div>
               {/* Middle: text */}
