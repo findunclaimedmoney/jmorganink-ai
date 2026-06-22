@@ -1,0 +1,111 @@
+========================================
+MISSINGCASH — AD TRACKING & LAUNCH GUIDE
+========================================
+Last updated: 22 June 2026
+
+----------------------------------------
+1. YOUR AD LANDING PAGE
+----------------------------------------
+Your clean, distraction-free landing page lives at:
+
+    https://YOURSITE/start
+
+(Replace YOURSITE with your live web address.)
+
+It has:
+ - A bold "is the government holding money that's yours?" hook + live counter
+ - A spot for people to leave their email for unclaimed-money alerts
+ - The Stratton finance enquiry form (with the required consent tick + compliance wording)
+
+This is the ONE page to send all your ad traffic to.
+
+
+----------------------------------------
+2. HOW THE TRACKING TAG WORKS
+----------------------------------------
+Add a tag to the end of the link like this:
+
+    https://YOURSITE/start?v=cars1
+
+The "?v=cars1" part is the tag. It travels WITH the link wherever
+you put it — it doesn't matter if it's a video ad, a post, your bio
+link, an email, or a banner. Whoever clicks that exact link gets
+counted under that tag.
+
+When a lead comes into your inbox, the email tells you which tag it
+came from — so you'll know exactly which video or post brought them in.
+
+
+----------------------------------------
+3. GIVE EACH PLACE ITS OWN TAG
+----------------------------------------
+Use a DIFFERENT tag everywhere so you can tell them apart:
+
+    Video ad #1     ->  https://YOURSITE/start?v=cars1
+    Video ad #2     ->  https://YOURSITE/start?v=cars2
+    A post          ->  https://YOURSITE/start?v=post1
+    Link in bio     ->  https://YOURSITE/start?v=bio
+
+You can name the tags anything you like (keep them short, no spaces).
+Example: ?v=super1, ?v=tiktokjune, ?v=homeloans, etc.
+
+
+----------------------------------------
+4. THE ONLY RULE
+----------------------------------------
+The person must click the FULL link, including the "?v=..." part.
+
+ - If they click the full tagged link  -> the lead shows that tag. 
+ - If they just type your plain address -> the lead still comes
+   through fine, it just won't have a tag on it.
+
+
+----------------------------------------
+5. TIKTOK TIP (VIDEOS vs POSTS)
+----------------------------------------
+ - ORGANIC POSTS: TikTok usually does NOT let people tap a link in
+   the caption. So for normal posts, put your tagged link in your BIO.
+ - ADS: Ads get a tappable button — point that button straight at
+   your tagged link.
+
+Both capture the tag perfectly. The only difference is WHERE the
+clickable link sits.
+
+
+----------------------------------------
+6. CURRENT STATUS (ALL LIVE & WORKING)
+----------------------------------------
+Verified on the live site:
+ [x] /start landing page loads
+ [x] Finance enquiries SAVE to your database
+ [x] Finance enquiries EMAIL you at admin@missingcash.com.au
+ [x] Email-alert signups work
+ [x] Per-video tracking tag carries through to the lead email
+
+You're clear to start running ads.
+
+
+----------------------------------------
+7. ONE THING FOR LATER (NEXT MONTH)
+----------------------------------------
+Right now leads come to YOU only (nothing goes to Stratton yet — this
+protects your agreement with them).
+
+Once your "missingcash.com.au" domain is verified in Resend:
+ - Leads will send from your own branded address, AND
+ - Erin (erin.crofton@stratton.com.au) will be CC'd automatically.
+
+There's nothing for you to build for this — just tell me when the
+domain shows "verified" and it gets switched on with one setting.
+
+
+----------------------------------------
+8. NOTE ON TEST ENTRIES
+----------------------------------------
+There are a few fake test entries in your leads database, all clearly
+labelled "TEST ... IGNORE". They're harmless and your real leads will
+look completely different. They can be cleaned up later if you want.
+
+========================================
+Questions? Just ask.
+========================================

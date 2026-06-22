@@ -191,3 +191,9 @@ id = "JazSWlJAO8E1YkT1aoUZA"
 uri = "file://artifacts/missingcash/public/stratton-logo.png"
 type = "image"
 title = "Stratton Finance Logo"
+
+[[outputs]]
+id = "MDf8sAI6z24iYNn9N-Ycn"
+uri = "file://MissingCash-Ad-Tracking-Guide.txt"
+type = "text"
+title = "MissingCash Ad Tracking & Launch Guide"
