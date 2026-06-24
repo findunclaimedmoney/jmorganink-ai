@@ -58,7 +58,7 @@ export function Scene3() {
           animate={phase >= 3 ? { y: 0, opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
         >
-          Mia Speed Research for <span className="text-[#f5b942] font-bold">$99</span>
+          <span className="text-[#00C1D5] font-bold">No find, no fee</span> — free to start
         </motion.p>
       </div>
 
