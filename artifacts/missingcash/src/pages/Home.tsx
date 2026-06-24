@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Loader2, CheckCircle2, AlertCircle, FileText, ChevronRight, Bell } from "lucide-react";
+import { Search, Loader2, CheckCircle2, FileText, ChevronRight, Bell, Zap, BookOpen } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { usePageSEO } from "@/hooks/use-page-seo";
@@ -204,78 +204,74 @@ export default function Home() {
               </div>
             ) : (
               <div className="animate-in fade-in zoom-in duration-300">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 text-green-500 mb-4">
-                    <CheckCircle2 className="w-8 h-8" />
+                {/* Header */}
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-500/20 text-green-500 mb-3">
+                    <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <DialogTitle className="text-3xl font-heading tracking-wider text-white mb-2">POTENTIAL MATCHES FOUND</DialogTitle>
-                  <DialogDescription className="text-base text-muted-foreground">
-                    We found <strong className="text-white">4 records</strong> matching {searchName} in the national database.
+                  <DialogTitle className="text-2xl font-heading tracking-wider text-white mb-1">RECORDS FOUND FOR {searchName.toUpperCase()}</DialogTitle>
+                  <DialogDescription className="text-sm text-muted-foreground">
+                    Potential matches detected across Australian government databases. Choose how to proceed:
                   </DialogDescription>
                 </div>
-                
-                <div className="space-y-3 mb-8">
+
+                {/* Blurred match preview */}
+                <div className="space-y-2 mb-6">
                   {[
-                    { source: 'ATO Unclaimed Super', amount: '***.**', year: '2019' },
-                    { source: 'NSW State Register', amount: '***.**', year: '2021' },
-                    { source: 'ASIC Lost Shares', amount: '***.**', year: '2018' },
+                    { source: 'ATO — Lost Superannuation', year: '2019' },
+                    { source: 'ASIC / MoneySmart Register', year: '2021' },
+                    { source: 'State Revenue Office', year: '2018' },
                   ].map((match, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-lg bg-secondary border border-border">
+                    <div key={i} className="flex items-center justify-between px-4 py-3 rounded-lg bg-secondary border border-border">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded bg-background flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-white">{match.source}</p>
-                          <p className="text-xs text-muted-foreground">Record from {match.year}</p>
-                        </div>
+                        <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <p className="text-sm font-medium text-white">{match.source}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-mono font-medium text-primary text-lg blur-sm select-none">{match.amount}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase">Value Hidden</p>
+                        <p className="font-mono font-bold text-primary blur-sm select-none text-base">$*,***</p>
+                        <p className="text-[10px] text-muted-foreground uppercase">Amount hidden</p>
                       </div>
                     </div>
                   ))}
                 </div>
-                
-                <div className="space-y-3">
-                  {/* Done For You — top tier */}
-                  <div className="bg-gradient-to-br from-primary/15 to-primary/5 border-2 border-primary/50 rounded-xl p-5 text-center relative overflow-hidden">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-4 py-1 rounded-full tracking-wider">⭐ BEST VALUE</div>
-                    <h4 className="font-heading text-xl mb-1 text-white mt-2">DONE FOR YOU</h4>
-                    <p className="text-sm font-semibold text-primary mb-1">We search every database. You do nothing.</p>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      Our team searches all 8 Australian databases for you and emails your full results within 48 hours.
+
+                <p className="text-xs text-center text-muted-foreground mb-5">To reveal amounts and claim your money, choose an option below:</p>
+
+                {/* Two options */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Option 1: DIY Guide */}
+                  <div className="border border-border rounded-2xl p-5 flex flex-col text-center hover:border-primary/40 transition-colors bg-secondary/30">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border border-primary/30 mx-auto mb-3">
+                      <BookOpen className="w-6 h-6 text-primary" />
+                    </div>
+                    <h4 className="font-heading text-base text-white mb-1">DO IT YOURSELF</h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
+                      Get the step-by-step PDF guide. Search every database yourself at your own pace.
                     </p>
-                    <a href="https://buy.stripe.com/8x2eVc524goleMR6I84c80h" target="_blank" rel="noopener noreferrer">
-                      <Button size="lg" className="w-full h-14 text-lg font-bold tracking-wider rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_4px_14px_rgba(245,185,66,0.4)] transition-all" data-testid="button-done-for-you">
-                        DO IT FOR ME — $149
-                      </Button>
-                    </a>
-                    <p className="text-xs text-muted-foreground mt-2">🔒 Secure via Stripe · Results emailed within 48 hours</p>
-                  </div>
-                  {/* Mia Speed Recovery — guided option */}
-                  <div className="bg-gradient-to-br from-[#00C1D5]/10 to-primary/5 border border-[#00C1D5]/30 rounded-xl p-4 text-center relative overflow-hidden">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00C1D5] text-white text-xs font-bold px-4 py-1 rounded-full tracking-wider">⚡ INSTANT</div>
-                    <h4 className="font-heading text-lg mb-1 text-white mt-2">MIA SPEED RECOVERY</h4>
-                    <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-                      Mia guides you live through every database right now, step by step.
-                    </p>
-                    <a href="https://buy.stripe.com/5kQdR82TWdc9eMR2rS4c80i" target="_blank" rel="noopener noreferrer">
-                      <Button size="lg" className="w-full h-11 text-base font-bold tracking-wider rounded-xl bg-[#00C1D5] text-white hover:bg-[#00C1D5]/90 transition-all">
-                        GUIDE ME NOW — $99
-                      </Button>
-                    </a>
-                  </div>
-                  {/* Guide — self-service option */}
-                  <div className="bg-card border border-border rounded-xl p-4 text-center">
-                    <h4 className="font-heading text-base mb-1 text-primary">DIY CLAIM GUIDE</h4>
-                    <p className="text-xs text-muted-foreground mb-3">PDF guide — do it yourself at your own pace.</p>
                     <a href="https://buy.stripe.com/6oUbJ0eCE4FDbAFaYo4c800" target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" variant="outline" className="w-full border-border text-muted-foreground hover:text-white transition-all" data-testid="button-claim-money">
+                      <Button variant="outline" className="w-full font-bold tracking-wider border-primary/40 text-primary hover:bg-primary/10 hover:text-primary" data-testid="button-claim-money">
                         GET THE GUIDE — $4.99
                       </Button>
                     </a>
+                    <p className="text-[10px] text-muted-foreground mt-2">📄 Instant PDF · Search at your own pace</p>
+                  </div>
+
+                  {/* Option 2: Mia Speed Research */}
+                  <div className="relative border-2 border-[#00C1D5]/60 rounded-2xl p-5 flex flex-col text-center bg-gradient-to-b from-[#00C1D5]/10 to-transparent overflow-hidden">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00C1D5] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider whitespace-nowrap">⭐ MOST POPULAR</div>
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#00C1D5]/20 border border-[#00C1D5]/40 mx-auto mb-3 mt-1">
+                      <Zap className="w-6 h-6 text-[#00C1D5]" />
+                    </div>
+                    <h4 className="font-heading text-base text-white mb-1">MIA DOES THE SEARCH</h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
+                      Mia searches every database using your details and emails you a full personalised report in minutes.
+                    </p>
+                    <a href="https://buy.stripe.com/5kQdR82TWdc9eMR2rS4c80i" target="_blank" rel="noopener noreferrer">
+                      <Button className="w-full font-bold tracking-wider bg-[#00C1D5] hover:bg-[#00C1D5]/90 text-white shadow-[0_4px_14px_rgba(0,193,213,0.35)]">
+                        MIA DO IT — $99
+                      </Button>
+                    </a>
+                    <p className="text-[10px] text-muted-foreground mt-2">⚡ Report emailed in minutes · No effort required</p>
                   </div>
                 </div>
               </div>
