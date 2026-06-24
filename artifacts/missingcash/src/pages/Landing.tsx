@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import VideoSplash from "@/components/VideoSplash";
 import {
   Phone,
   Search,
@@ -44,6 +45,8 @@ export default function Landing() {
       "unclaimed money Australia, missing money, lost super, ATO unclaimed money, ASIC unclaimed, car loans, personal loans, Stratton Finance",
     canonical: "https://missingcash.com.au/start",
   });
+
+  const [showSplash, setShowSplash] = useState(true);
 
   const [loanType, setLoanType] = useState<LoanKey>("car");
   const activeLoan = LOAN_TYPES.find((l) => l.key === loanType)!;
@@ -99,6 +102,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground selection:bg-primary/30 selection:text-white">
+      {showSplash && <VideoSplash onDone={() => setShowSplash(false)} />}
       {/* Minimal header */}
       <header className="sticky top-0 z-40 border-b border-white/8 bg-[#061826]/85 backdrop-blur-md">
         <div className="container mx-auto px-5 max-w-6xl flex items-center justify-between h-16">
