@@ -194,12 +194,15 @@ export default function VideoSplash({ onDone }: Props) {
                     transition={{ duration: 0.5 }}
                   />
                 </div>
-                <button
-                  onClick={handleDone}
-                  className="text-xs text-white/40 hover:text-white/80 transition-colors tracking-widest uppercase border border-white/20 hover:border-white/50 rounded-full px-5 py-2"
-                >
-                  Skip ▶
-                </button>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-white/30 text-xs tracking-wide">Skip here to go to the homepage</p>
+                  <button
+                    onClick={handleDone}
+                    className="text-xs text-white/40 hover:text-white/80 transition-colors tracking-widest uppercase border border-white/20 hover:border-white/50 rounded-full px-5 py-2"
+                  >
+                    Skip ▶
+                  </button>
+                </div>
               </div>
             </div>
           )}
