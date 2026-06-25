@@ -244,7 +244,16 @@ async function sendOutreachEmail(
       </a>
       <p style="color:#6b7a8d;font-size:11px;margin:12px 0 0;">${pct}% of ${amount} · Secure Stripe payment · Report delivered instantly after payment</p>
     </div>
-    <p style="color:#6b7a8d;font-size:11px;text-align:center;">Questions? Reply to this email or contact support@missingcash.com.au</p>
+    ${dollars > 20000 ? `
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid #1a2a3a;text-align:center;">
+      <p style="color:#94a3b8;font-size:13px;margin:0 0 12px;">💡 <strong style="color:#fff;">Can't cover the fee upfront?</strong></p>
+      <p style="color:#6b7a8d;font-size:12px;margin:0 0 14px;">Stratton Finance can fund your claim fee using your ${amount} as collateral — you pay nothing until the money is in your account.</p>
+      <a href="${SITE_BASE}/finance?fn=${encodeURIComponent(firstName)}&ln=${encodeURIComponent(parsed?.lastName ?? "")}&email=${encodeURIComponent(email)}&amount=${encodeURIComponent(amount)}&source=prospect-finance" style="background:#0f2233;color:#f5b942;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;display:inline-block;border:1px solid #f5b942/30;">
+        Apply for Fee Finance via Stratton →
+      </a>
+      <p style="color:#6b7a8d;font-size:10px;margin:10px 0 0;">Stratton Finance ACL 364340 · Subject to credit assessment</p>
+    </div>` : ""}
+    <p style="color:#6b7a8d;font-size:11px;text-align:center;margin-top:16px;">Questions? Reply to this email or contact support@missingcash.com.au</p>
   </div>
   <div style="background:#061826;padding:16px 32px;text-align:center;border-top:1px solid #1a2a3a;">
     <p style="color:#6b7a8d;font-size:11px;margin:0;">© MissingCash | ABN 52 347 989 391 | support@missingcash.com.au</p>

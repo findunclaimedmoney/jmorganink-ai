@@ -77,7 +77,21 @@ function fmtAUD(n: number): string {
   return "$" + Math.round(n).toLocaleString("en-AU");
 }
 
+function readPrefill() {
+  if (typeof window === "undefined") return { firstName: "", lastName: "", email: "", amount: "", source: "" };
+  const p = new URLSearchParams(window.location.search);
+  return {
+    firstName: p.get("fn") ?? "",
+    lastName:  p.get("ln") ?? "",
+    email:     p.get("email") ?? "",
+    amount:    p.get("amount") ?? "",
+    source:    p.get("source") ?? "",
+  };
+}
+
 export default function Finance() {
+  const [prefill]                         = useState(readPrefill);
+  const isProspect                        = prefill.source === "prospect-finance";
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [consent, setConsent]             = useState(false);
   const [submitting, setSubmitting]       = useState(false);
@@ -467,19 +481,28 @@ export default function Finance() {
           </div>
         ) : (
           <form ref={formRef} onSubmit={handleSubmit} className="bg-white/4 border border-white/10 rounded-3xl p-8 space-y-5">
+            {isProspect && prefill.amount && (
+              <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 rounded-xl p-4 flex gap-3 items-start">
+                <span className="text-2xl">🎉</span>
+                <div>
+                  <p className="text-[#F5B942] font-bold text-sm">MissingCash found {prefill.amount} in your name!</p>
+                  <p className="text-white/60 text-xs mt-1">Erin can arrange finance to cover the claim fee — your unclaimed money is the collateral. Fill in your details below and Erin will be in touch.</p>
+                </div>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName" className="text-white/60 text-sm mb-1.5 block">First Name *</Label>
-                <Input id="firstName" name="firstName" required placeholder="Jane" className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
+                <Input id="firstName" name="firstName" required placeholder="Jane" defaultValue={prefill.firstName} className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
               </div>
               <div>
                 <Label htmlFor="lastName" className="text-white/60 text-sm mb-1.5 block">Last Name *</Label>
-                <Input id="lastName" name="lastName" required placeholder="Smith" className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
+                <Input id="lastName" name="lastName" required placeholder="Smith" defaultValue={prefill.lastName} className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
               </div>
             </div>
             <div>
               <Label htmlFor="email" className="text-white/60 text-sm mb-1.5 block">Email *</Label>
-              <Input id="email" name="email" type="email" required placeholder="jane@example.com" className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
+              <Input id="email" name="email" type="email" required placeholder="jane@example.com" defaultValue={prefill.email} className="bg-white/6 border-white/15 text-white placeholder:text-white/25 h-11" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -523,7 +546,7 @@ export default function Finance() {
             </div>
             <div>
               <Label htmlFor="message" className="text-white/60 text-sm mb-1.5 block">Message (optional)</Label>
-              <Textarea id="message" name="message" rows={3} placeholder="Anything else Erin should know? (optional)" className="bg-white/6 border-white/15 text-white placeholder:text-white/25 resize-none" />
+              <Textarea id="message" name="message" rows={3} placeholder="Anything else Erin should know? (optional)" defaultValue={isProspect && prefill.amount ? `MissingCash found ${prefill.amount} in my name. I'd like finance to cover the claim fee, using the unclaimed money as collateral once claimed.` : ""} className="bg-white/6 border-white/15 text-white placeholder:text-white/25 resize-none" />
             </div>
 
             <label className="flex items-start gap-3 cursor-pointer group">

@@ -156,7 +156,16 @@ async function sendFoundEmail(opts: {
       </a>
       <p style="color:#6b7a8d;font-size:11px;margin:12px 0 0;">${feePercent}% of ${totalStr} found · Secure payment via Stripe · Report emailed instantly</p>
     </div>
-    <p style="color:#6b7a8d;font-size:11px;margin:16px 0 0;text-align:center;">No charge has been made. You only pay if you choose to unlock your report.<br>Questions? Email support@missingcash.com.au</p>
+    ${totalAmountCents > 2_000_000 ? `
+    <div style="margin-top:16px;padding:16px;border-top:1px solid #1a2a3a;text-align:center;">
+      <p style="color:#94a3b8;font-size:13px;margin:0 0 8px;">💡 <strong style="color:#fff;">Can't cover the fee upfront?</strong></p>
+      <p style="color:#6b7a8d;font-size:12px;margin:0 0 12px;">Stratton Finance can fund your ${feeStr} claim fee — using your ${totalStr} as collateral. Nothing out of pocket until you've claimed your money.</p>
+      <a href="${SITE_BASE}/finance?fn=${encodeURIComponent(firstName)}&ln=${encodeURIComponent(lastName)}&email=${encodeURIComponent(email)}&amount=${encodeURIComponent(totalStr)}&source=prospect-finance" style="background:#0f2233;color:#f5b942;padding:11px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px;display:inline-block;border:1px solid rgba(245,185,66,0.3);">
+        Finance my fee via Stratton →
+      </a>
+      <p style="color:#6b7a8d;font-size:10px;margin:8px 0 0;">Stratton Finance ACL 364340 · Subject to credit assessment</p>
+    </div>` : ""}
+    <p style="color:#6b7a8d;font-size:11px;margin:16px 0 0;text-align:center;">Questions? Email support@missingcash.com.au</p>
   </div>
   <div style="background:#061826;padding:20px 32px;text-align:center;border-top:1px solid #1a2a3a;">
     <p style="color:#6b7a8d;font-size:11px;margin:0;">© MissingCash | ABN 52 347 989 391 | support@missingcash.com.au</p>
