@@ -145,6 +145,18 @@ export default function FindMyMoney() {
           </div>
         </div>
 
+        {/* Mia video */}
+        <div className="max-w-sm mx-auto mb-12">
+          <div className="rounded-2xl overflow-hidden border border-border shadow-[0_4px_30px_rgba(0,193,213,0.15)]">
+            <video
+              src="/mia-does-it.mp4"
+              controls
+              playsInline
+              className="w-full"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
 
           {/* Form */}
