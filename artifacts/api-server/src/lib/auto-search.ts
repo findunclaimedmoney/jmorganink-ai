@@ -12,7 +12,7 @@ import { eq, notInArray, and, gte, sql } from "drizzle-orm";
 import { searchAllSources } from "./multi-scraper";
 import { logger } from "./logger";
 
-const DAILY_LIMIT = parseInt(process.env.AUTO_SEARCH_DAILY_LIMIT ?? "10", 10);
+const DAILY_LIMIT = parseInt(process.env.AUTO_SEARCH_DAILY_LIMIT ?? "100", 10);
 const INTERVAL_MS = 3 * 60 * 1000;
 
 const SITE_BASE = process.env.REPLIT_DOMAINS
@@ -330,7 +330,7 @@ async function runAutoSearch() {
 
     const searchId = searchRow!.id;
 
-    const results = await searchAllSources({ firstName: lead.firstName, lastName: lead.lastName, address: lead.address || undefined });
+    const results = await searchAllSources({ firstName: lead.firstName, lastName: lead.lastName, address: lead.address || undefined, dob: lead.dob !== "unknown" ? lead.dob : undefined });
     const validMatches = results.matches.filter((m) => m.name && m.holder !== undefined);
     let totalAmountCents = 0;
     for (const m of validMatches) totalAmountCents += parseAmountCents(m.amount);

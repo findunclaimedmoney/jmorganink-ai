@@ -38,6 +38,7 @@ async function fetchPage(
     render_js: "true",
     premium_proxy: "true",
     block_ads: "true",
+    country_code: "au",
     wait: String(opts.wait ?? 3000),
   });
   if (opts.jsScenario) {
@@ -220,13 +221,28 @@ function extractSuburb(address: string): string {
   return parts[parts.length - 1] ?? "";
 }
 
-async function scrapeWA(searchName: string, apiKey: string, address?: string): Promise<SourceResult> {
+/**
+ * Converts a dob string (YYYY-MM-DD, DD/MM/YYYY, or partial) to DD/MM/YYYY.
+ * Returns empty string if the dob is missing or "unknown".
+ */
+function formatDobForWA(dob?: string): string {
+  if (!dob || dob === "unknown") return "";
+  // Already DD/MM/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) return dob;
+  // YYYY-MM-DD
+  const iso = dob.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  return "";
+}
+
+async function scrapeWA(searchName: string, apiKey: string, address?: string, dob?: string): Promise<SourceResult> {
   const sourceKey = "wa";
   const sourceName = "WA Unclaimed Monies (DTF)";
   try {
     const { first, last } = splitName(searchName);
     const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-    const suburb = address ? extractSuburb(address) : "WA";
+    const suburb = address ? extractSuburb(address) : "";
+    const dobFormatted = formatDobForWA(dob);
 
     const fillFn = `
 (function(){
@@ -240,11 +256,19 @@ async function scrapeWA(searchName: string, apiKey: string, address?: string): P
     el.dispatchEvent(new Event('change',{bubbles:true}));
     return true;
   }
+  function setValBySelectors(sels,val){
+    for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el){el.removeAttribute('disabled');var ns=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value');if(ns&&ns.set){ns.set.call(el,val);}else{el.value=val;}el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));return true;}}return false;
+  }
   var cb=document.getElementById('agreeTermsCheckBox');
   if(cb&&!cb.checked){cb.click();}
   setTimeout(function(){
     setValById('payeeName','${esc(first)} ${esc(last)}');
     setValById('address_2','${esc(suburb)}');
+    var dobVal='${esc(dobFormatted)}';
+    if(dobVal){
+      var dobSels=['#dateOfBirth','#dob','#date_of_birth','#birthDate','input[name="dateOfBirth"]','input[name="dob"]','input[name="date_of_birth"]','input[placeholder*="date of birth" i]','input[placeholder*="dd/mm/yyyy" i]'];
+      setValBySelectors(dobSels,dobVal);
+    }
     var btn=document.querySelector('button.search-btn')||document.querySelector('button[type="submit"]');
     if(btn){btn.removeAttribute('disabled');btn.click();}
   },2000);
@@ -331,11 +355,50 @@ async function scrapeAFCA(searchName: string, apiKey: string): Promise<SourceRes
   }
 }
 
+async function scrapeGoogleSearch(searchName: string, apiKey: string): Promise<SourceResult> {
+  const sourceKey = "google";
+  const sourceName = "Google Search (gov.au)";
+  try {
+    const { first, last } = splitName(searchName);
+    const query = `"${first} ${last}" unclaimed money australia`;
+    const params = new URLSearchParams({
+      api_key: apiKey,
+      search: query,
+      language: "en",
+      country_code: "au",
+    });
+    const res = await fetch(`https://app.scrapingbee.com/api/v1/store/google?${params.toString()}`, {
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`ScrapingBee Google ${res.status}: ${body.slice(0, 300)}`);
+    }
+    const data = (await res.json()) as { organic_results?: { title?: string; url?: string; description?: string }[] };
+    const govResults = (data.organic_results ?? []).filter(
+      (r) => r.url && /\.gov\.au|moneysmart\.gov\.au/.test(r.url)
+    );
+    const matches: SourceMatch[] = govResults.map((r) => ({
+      name: searchName,
+      amount: extractAmount(r.description ?? ""),
+      holder: r.title ?? "",
+      state: "",
+      source: sourceName,
+      sourceKey,
+    }));
+    return { sourceKey, sourceName, matches, scraped: true };
+  } catch (err) {
+    logger.error({ err, sourceKey }, "Google Search scraper failed");
+    return { sourceKey, sourceName, matches: [], scraped: false, error: String(err) };
+  }
+}
+
 export async function searchAllSources(opts: {
   firstName: string;
   lastName: string;
   previousSurnames?: string;
   address?: string;
+  dob?: string;
 }): Promise<MultiSourceResults> {
   const apiKey = process.env.SCRAPINGBEE_API_KEY;
   if (!apiKey) {
@@ -358,9 +421,9 @@ export async function searchAllSources(opts: {
   for (const name of namesToSearch) {
     const { first, last } = splitName(name);
 
-    logger.info({ name }, "Starting multi-source search across 11 databases");
+    logger.info({ name }, "Starting multi-source search across 13 databases");
 
-    // ScrapingBee allows max 5 concurrent requests — run in three batches
+    // Freelance plan supports 50 concurrent — run in two batches of ~6 each
     const batch1 = await Promise.allSettled([
       searchMoneySmart({ firstName: first, lastName: last }).then((r): SourceResult => ({
         sourceKey: "moneysmart",
@@ -371,22 +434,20 @@ export async function searchAllSources(opts: {
       scrapeNSW(name, apiKey),
       scrapeVIC(name, apiKey),
       scrapeQLD(name, apiKey),
-      scrapeWA(name, apiKey, opts.address),
+      scrapeWA(name, apiKey, opts.address, opts.dob),
+      scrapeSA(name, apiKey),
+      scrapeGoogleSearch(name, apiKey),
     ]);
 
     const batch2 = await Promise.allSettled([
-      scrapeSA(name, apiKey),
       scrapeTAS(name, apiKey),
       scrapeNT(name, apiKey),
       scrapeACT(name, apiKey),
       scrapeComputershare(name, apiKey),
-    ]);
-
-    const batch3 = await Promise.allSettled([
       scrapeAFCA(name, apiKey),
     ]);
 
-    for (const r of [...batch1, ...batch2, ...batch3]) {
+    for (const r of [...batch1, ...batch2]) {
       if (r.status === "fulfilled") {
         allSourceResults.push(r.value);
         allMatches.push(...r.value.matches);
