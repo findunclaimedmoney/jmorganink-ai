@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import Stripe from "stripe";
 import { db, miaFreeSearchesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { searchMoneySmart } from "../lib/moneysmart-scraper";
+import { searchAllSources } from "../lib/multi-scraper";
 
 const router: IRouter = Router();
 
@@ -69,9 +69,9 @@ router.post("/mia/search/start", async (req, res) => {
 
   (async () => {
     try {
-      req.log.info({ searchId, firstName, lastName }, "Starting free MoneySmart search");
+      req.log.info({ searchId, firstName, lastName }, "Starting multi-source search (8 databases)");
 
-      const results = await searchMoneySmart({
+      const results = await searchAllSources({
         firstName,
         lastName,
         previousSurnames: previousSurnames || undefined,
@@ -89,6 +89,7 @@ router.post("/mia/search/start", async (req, res) => {
         holder: m.holder,
         state: m.state,
         amount: m.amount,
+        source: (m as { source?: string }).source ?? "",
       }));
 
       const hasMatches = validMatches.length > 0;
@@ -100,7 +101,7 @@ router.post("/mia/search/start", async (req, res) => {
         teaserMatchesJson: JSON.stringify(teaserMatches),
       }).where(eq(miaFreeSearchesTable.id, searchId));
 
-      req.log.info({ searchId, status, matchCount: validMatches.length, totalAmountCents }, "Free search complete");
+      req.log.info({ searchId, status, matchCount: validMatches.length, totalAmountCents, sourcesSearched: results.sourceResults.length }, "Multi-source search complete");
     } catch (err) {
       req.log.error({ err, searchId }, "Free search failed");
       try {

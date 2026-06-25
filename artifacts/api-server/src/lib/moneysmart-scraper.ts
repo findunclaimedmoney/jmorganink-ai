@@ -37,7 +37,7 @@ async function fetchViaScrapingBee(targetUrl: string, apiKey: string): Promise<s
     signal: AbortSignal.timeout(30_000),
   });
 
-  if (!res.ok) {
+  if (!res.ok && res.status !== 404) {
     const body = await res.text().catch(() => "");
     throw new Error(`ScrapingBee ${res.status}: ${body.slice(0, 200)}`);
   }

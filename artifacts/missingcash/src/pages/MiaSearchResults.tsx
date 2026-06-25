@@ -10,7 +10,7 @@ interface SearchResult {
   feeCents: number;
   feePercent: number;
   matchCount: number;
-  teaserMatches: { name: string; holder: string; state: string; amount: string }[];
+  teaserMatches: { name: string; holder: string; state: string; amount: string; source?: string }[];
   email: string;
   firstName: string;
 }
@@ -210,7 +210,7 @@ export default function MiaSearchResults() {
             >
               <p className="text-xs text-[#00C1D5] font-bold tracking-widest mb-1">TOTAL FOUND</p>
               <p className="text-5xl font-heading text-white font-black">{totalDollars}</p>
-              <p className="text-xs text-muted-foreground mt-1">across {result.matchCount} {result.matchCount === 1 ? "match" : "matches"} in the MoneySmart register</p>
+              <p className="text-xs text-muted-foreground mt-1">across {result.matchCount} {result.matchCount === 1 ? "match" : "matches"} in Australian government databases</p>
             </motion.div>
           )}
           {!totalDollars && (
@@ -222,7 +222,7 @@ export default function MiaSearchResults() {
             >
               <p className="text-xs text-[#00C1D5] font-bold tracking-widest mb-1">POTENTIAL MATCHES</p>
               <p className="text-4xl font-heading text-white font-black">{result.matchCount} Found</p>
-              <p className="text-xs text-muted-foreground mt-1">in the MoneySmart unclaimed money register</p>
+              <p className="text-xs text-muted-foreground mt-1">in Australian government databases</p>
             </motion.div>
           )}
         </motion.div>
@@ -243,7 +243,7 @@ export default function MiaSearchResults() {
                 <div>
                   <p className="text-sm font-bold text-white">{m.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {m.state ? `${m.state} · ` : ""}{m.holder ? m.holder : "Institution on file"}
+                    {m.source ? `${m.source}` : "Institution on file"}{m.state ? ` · ${m.state}` : ""}
                   </p>
                 </div>
                 <div className="text-right">
