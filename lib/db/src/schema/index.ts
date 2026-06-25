@@ -109,10 +109,29 @@ export const prospectsTable = pgTable("prospects", {
   source: text("source").notNull(),
   sourceKey: text("source_key").notNull(),
   letter: text("letter").notNull(),
+  contactStatus: text("contact_status").notNull().default("pending"),
+  contactEmail: text("contact_email"),
+  contactPhone: text("contact_phone"),
+  contactAddress: text("contact_address"),
+  contactSource: text("contact_source"),
+  contactSearchedAt: timestamp("contact_searched_at"),
+  outreachSentAt: timestamp("outreach_sent_at"),
   scrapedAt: timestamp("scraped_at").notNull().defaultNow(),
 });
 
 export type Prospect = typeof prospectsTable.$inferSelect;
+
+export const alphabetCrawlProgressTable = pgTable("alphabet_crawl_progress", {
+  letter: text("letter").primaryKey(),
+  status: text("status").notNull().default("pending"),
+  prospectCount: integer("prospect_count").notNull().default(0),
+  contactsFound: integer("contacts_found").notNull().default(0),
+  outreachSent: integer("outreach_sent").notNull().default(0),
+  startedAt: timestamp("started_at"),
+  completedAt: timestamp("completed_at"),
+});
+
+export type AlphabetCrawlProgress = typeof alphabetCrawlProgressTable.$inferSelect;
 
 export const pageViewsTable = pgTable("page_views", {
   id: serial("id").primaryKey(),
