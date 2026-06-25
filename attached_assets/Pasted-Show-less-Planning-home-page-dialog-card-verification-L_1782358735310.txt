@@ -1,0 +1,49 @@
+Show less
+
+Planning home page dialog card verification
+Looking great! Let me verify the home page dialog card too:
+
+
+2 actions
+Everything is built and running. Here's the full flow that's now live:
+
+What the customer experiences:
+
+Home page — dialog now shows "NO FIND, NO FEE" badge, button says "MIA DO IT — FREE TO START" linking to /mia-search
+/mia-search — free form: email, name, DOB, current address (+ optional previous addresses/surnames)
+Submit — Mia searches MoneySmart in the background, no payment needed
+/mia-search/results — animated "Mia is searching..." screen cycling through databases, then...
+Results reveal — if money found: shows the total dollar amount + locked match cards (name + institution shown, claim steps hidden behind a lock icon)
+"Unlock My Full Report" — Stripe checkout created dynamically with the percentage fee (5%–33% depending on amount)
+After payment — webhook fires, generates the full personalised PDF, emails it instantly
+/mia-search/paid — thank you page confirming report is on its way
+How payment is enforced: customers can see that money exists and roughly how much — but the exact institution, account reference, claim form links, and step-by-step instructions are all locked until they pay. They can't claim without those details.
+
+
+Checkpoint made
+18 hours ago
+Add a free-to-start unclaimed money search with payment on success
+Jun 24, 2026, 5:48 PM
+
+Worked for 8 minutes
+also i wanna do this? let me know if its duable. i want to charge $4.99 for every person that wants to sign up for mia to search on the interent and if we do find anyrhing we will dontact them by email? plus the % free with an invoice saying we loacated this amount of mojey
+
+18 hours ago
+
+1 message & 1 action
+For the $4.99 — is that a one-time signup fee or a recurring monthly subscription?
+
+nah just leave it for now let me think about this
+18 hours ago
+
+Worked for 37 seconds
+No problem, just leave it for now. The new free search + success fee model is live whenever you're ready to test it.
+
+A quick summary of what's live right now:
+
+/mia-search — free form, no payment to start
+Mia searches MoneySmart in the background
+Results page shows the total found + locked match cards
+Customer pays the % fee to unlock the full claim report
+Full PDF emailed automatically after payment
+Let me know what you want to work on next!
