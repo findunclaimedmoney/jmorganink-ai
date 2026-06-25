@@ -100,6 +100,14 @@ export const miaFreeSearchesTable = pgTable("mia_free_searches", {
 
 export type MiaFreeSearch = typeof miaFreeSearchesTable.$inferSelect;
 
+export const pageViewsTable = pgTable("page_views", {
+  id: serial("id").primaryKey(),
+  path: text("path").notNull(),
+  referrer: text("referrer"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const autoSearchResultsTable = pgTable("auto_search_results", {
   id: serial("id").primaryKey(),
   sourceTable: text("source_table").notNull(),

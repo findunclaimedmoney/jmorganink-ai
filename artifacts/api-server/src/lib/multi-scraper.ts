@@ -460,7 +460,9 @@ export async function searchAllSources(opts: {
 
   const seen = new Set<string>();
   const deduped = allMatches.filter((m) => {
-    const key = `${normalise(m.name)}|${m.amount}|${m.sourceKey}`;
+    // Deduplicate by source + amount: same dollar amount from the same source = same record,
+    // regardless of which name variant matched it.
+    const key = `${m.sourceKey}|${m.amount}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;

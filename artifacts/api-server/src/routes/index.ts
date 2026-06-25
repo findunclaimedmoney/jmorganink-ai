@@ -9,6 +9,7 @@ import miaResearchRouter from "./mia-research";
 import miaSearchRouter from "./mia-search";
 import leadsRouter from "./leads";
 import batchSearchRouter from "./batch-search";
+import analyticsRouter from "./analytics";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(miaResearchRouter);
 router.use(miaSearchRouter);
 router.use(leadsRouter);
 router.use(batchSearchRouter);
+router.use(analyticsRouter);
 
 export default router;

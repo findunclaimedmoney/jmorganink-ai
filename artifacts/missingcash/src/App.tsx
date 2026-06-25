@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useState, useEffect } from "react";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -23,9 +23,24 @@ import MiaSearch from "@/pages/MiaSearch";
 import MiaSearchResults from "@/pages/MiaSearchResults";
 import MiaSearchPaid from "@/pages/MiaSearchPaid";
 import AdminBatchSearch from "@/pages/AdminBatchSearch";
+import AdminDashboard from "@/pages/AdminDashboard";
 
 import VideoTemplate from "@/components/video/VideoTemplate";
 import MiaPreview from "@/pages/MiaPreview";
+
+const BASE = import.meta.env.BASE_URL;
+
+function PageViewBeacon() {
+  const [location] = useLocation();
+  useEffect(() => {
+    fetch(`${BASE}api/analytics/pageview`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: location, referrer: document.referrer || null }),
+    }).catch(() => {});
+  }, [location]);
+  return null;
+}
 
 function Router() {
   return (
@@ -33,6 +48,7 @@ function Router() {
       <Route path="/video" component={VideoTemplate} />
       <Route path="/mia-preview" component={MiaPreview} />
       <Route path="/admin/batch" component={AdminBatchSearch} />
+      <Route path="/admin" component={AdminDashboard} />
 
       {/* Distraction-free marketing landing page — no global nav/footer */}
       <Route path="/start" component={TikTokLanding} />
@@ -82,6 +98,7 @@ function App() {
     <TooltipProvider>
       {showSplash && <VideoSplash onDone={handleSplashDone} />}
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <PageViewBeacon />
         <Router />
       </WouterRouter>
       <Toaster />
