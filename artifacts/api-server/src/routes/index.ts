@@ -8,6 +8,7 @@ import alertsRouter from "./alerts";
 import miaResearchRouter from "./mia-research";
 import miaSearchRouter from "./mia-search";
 import leadsRouter from "./leads";
+import batchSearchRouter from "./batch-search";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(alertsRouter);
 router.use(miaResearchRouter);
 router.use(miaSearchRouter);
 router.use(leadsRouter);
+router.use(batchSearchRouter);
 
 export default router;
