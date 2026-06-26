@@ -4,3 +4,4 @@
 - [Finance lead emails (Resend)](missingcash-resend-leads.md) — lensflow.com.au verified & sending in prod (emailSent:true); branded missingcash sender + Erin CC gated behind verifying missingcash.com.au + MISSINGCASH_DOMAIN_VERIFIED=true.
 - [Always update Mia's brain](mia-brain-rule.md) — standing rule: every new feature, DB count change, or scraper update must be reflected in mia-knowledge.ts (system prompt + tool description).
 - [MoneySmart crawl strategy](moneysmart-crawl-strategy.md) — NEVER search by single letter (?name=A) — blocked as bot. Always search by full surname per letter. Surname list is in SURNAMES_BY_LETTER constant in alphabet-scraper.ts, hand-curated, static.
+- [Contact finder strategy](contact-finder-strategy.md) — after MoneySmart hit, pipeline tries Google → Yellow Pages → ABN Lookup (abr.business.gov.au, gov cross-reference) in order. ABN gives suburb confirmation even when others fail.

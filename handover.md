@@ -49,6 +49,15 @@ Emails `admin@missingcash.com.au` every morning at 00:00 UTC (08:00 AWST) via Re
 
 **Credit usage:** ~3 ScrapingBee credits per prospect. Cap: `MAX_CONTACTS_PER_LETTER` (default 300).
 
+**Contact finder — 3-source government + commercial cross-reference:**
+File: `artifacts/api-server/src/lib/contact-finder.ts`
+After a name is found on MoneySmart, the pipeline searches for contact details in this order:
+1. Google Search → phone + email
+2. Yellow Pages AU → phone + address
+3. **ABN Lookup (`abr.business.gov.au`)** — Australian government business register → confirms person is real + returns suburb/state
+
+Returns on first hit. Company names (PTY, LTD, TRUST, etc.) are skipped entirely before any search runs.
+
 **⚠️ CRITICAL — How MoneySmart is crawled (do NOT change this without understanding it):**
 MoneySmart blocks single-letter searches (e.g. `?name=A`) as bot traffic — returns 500 error. The pipeline does NOT search by letter. Instead, it searches by **10 common Australian surnames per letter** (e.g. for A: Anderson, Adams, Allen, Armstrong, Andrews, Alexander, Abbott, Ahmed, Ali, Atkinson). Each surname search looks like a real human search and gets through fine.
 
