@@ -33,6 +33,41 @@
 
 ---
 
+## ⚠️ Previous Agent Errors & How They Were Fixed
+
+### Error 1: Video splash gate blocked all users
+**What the previous agent did:** Added a `VideoSplash` intro screen that forced every visitor to watch a video before accessing the site.
+**Problem:** Users couldn't get to the site content. Bad UX, killed conversions.
+**Fix:** Removed `VideoSplash` from `App.tsx` and `TikTokLanding.tsx` entirely. Site now loads directly.
+
+### Error 2: Broken HeyGen iframe left on a live page
+**What the previous agent did:** Added a HeyGen talking-avatar iframe to `MiaSearch.tsx` but the integration was never completed.
+**Problem:** The iframe showed a broken/error state on the live page.
+**Fix:** Removed the iframe from `MiaSearch.tsx`. HeyGen avatar ID (`05f1da4dc12744c087dace9e0651a6e0`) is documented in `replit.md` for when it's properly integrated later.
+
+### Error 3: ClaimReport.tsx crashed on 404
+**What the previous agent did:** ClaimReport assumed the API always returned a valid report object.
+**Problem:** When the API returned 404 (no report found for that user), the page crashed trying to read `.teaser` off `undefined`.
+**Fix:** Added a null check — if the API returns 404, show a proper "not found" message instead of crashing.
+
+### Error 4: ScrapingBee used datacenter IPs (`premium_proxy`) — got blocked
+**What the previous agent did:** Used `premium_proxy: true` in all ScrapingBee calls.
+**Problem:** `premium_proxy` uses datacenter IP addresses, which MoneySmart's Cloudflare bot protection detects and blocks (returns 500/613 errors). The previous agent then spent significant time going in circles — trying direct fetch, no-JS ScrapingBee, JS ScrapingBee, all with the same blocked proxy type. Never got a 200.
+**Fix:** Added `stealth_proxy: true` to ScrapingBee params. Stealth proxy uses residential IPs (real home internet connections) which Cloudflare cannot distinguish from real users. First request returned HTTP 200. Pipeline now running successfully.
+**Key lesson:** If ScrapingBee returns consistent 500s/613s on a Cloudflare-protected site, the proxy type is wrong — switch to `stealth_proxy`. Do not keep retrying with the same proxy type.
+
+### Error 5: Confused two separate Cloudflare setups
+**What the previous agent did:** When MoneySmart scraping failed, the previous agent asked the user about "Cloudflare codes" and spent time investigating the missingcash.com.au Cloudflare Worker as if it were related.
+**Problem:** The Cloudflare Worker for missingcash.com.au (at `missingcash.jmorganegypt.workers.dev`) handles INCOMING traffic to the site. It has zero relationship to OUTBOUND requests the server makes to MoneySmart. They are completely separate Cloudflare accounts and setups.
+**Fix:** Clarified the distinction, ignored the Worker credentials entirely, solved the actual problem (proxy type) instead.
+
+### Error 6: Three-tier scraper code written but never deployed
+**What the previous agent did:** Rewrote `alphabet-scraper.ts` with a three-tier fetch system (direct → ScrapingBee no-JS → ScrapingBee with JS) but called `suggest_deploy` without confirming the user clicked Publish.
+**Problem:** The new code only existed in dev. Production was still running the old broken code.
+**Fix:** Confirmed the code was in dev, added `stealth_proxy`, restarted the dev server, tested live, then suggested deploy again.
+
+---
+
 ## Project Overview
 Australian unclaimed money search service (missingcash.com.au). Mia is a site-wide AI assistant that searches 13 government databases. Revenue model: fee paid upfront via Stripe before claim details are revealed (5%–33% sliding scale based on amount found). Stratton Finance (Erin Crofton, Wanneroo WA) is a partner for high-value prospects who can't afford the fee upfront.
 
