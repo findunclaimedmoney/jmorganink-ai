@@ -1,5 +1,38 @@
 # MissingCash — Agent Handover
 
+## ⚠️ What Was Done Most Recently (26 Jun 2026) — DO NOT REPEAT
+
+### 1. Removed video splash gate
+- `artifacts/missingcash/src/App.tsx` — removed VideoSplash component import and usage
+- `artifacts/missingcash/src/pages/TikTokLanding.tsx` — removed intro video screen
+- Site now loads directly, no gate.
+
+### 2. Removed broken HeyGen iframe
+- `artifacts/missingcash/src/pages/MiaSearch.tsx` — removed broken HeyGen avatar iframe that was causing an error on the page.
+
+### 3. Fixed ClaimReport.tsx crash on 404
+- `artifacts/missingcash/src/pages/ClaimReport.tsx` — was crashing when the API returned 404 (no report found). Fixed to handle gracefully with a proper "not found" state instead of crashing on undefined teaser data.
+
+### 4. Rewrote MoneySmart scraper with three-tier fetch
+- `artifacts/api-server/src/lib/alphabet-scraper.ts` — replaced single-attempt ScrapingBee call with three-tier fallback:
+  1. Direct fetch (free, instant — works if MoneySmart returns SSR)
+  2. ScrapingBee without JS rendering (fast, cheap)
+  3. ScrapingBee with full JS rendering (last resort)
+- Added full error body logging on ScrapingBee failures.
+
+### 5. Switched ScrapingBee to stealth_proxy (CRITICAL — this is what makes scraping work)
+- `artifacts/api-server/src/lib/alphabet-scraper.ts` — changed from `premium_proxy` (datacenter IPs, blocked by Cloudflare) to `stealth_proxy: true` (residential IPs, gets through Cloudflare bot protection).
+- **Confirmed working** — pipeline was tested live, letter A surnames scraping successfully at HTTP 200.
+- **DO NOT revert to `premium_proxy`** — datacenter IPs get 500/613 errors from MoneySmart's Cloudflare.
+- ScrapingBee account has ~249k credits remaining (250k total, 1,160 used as of 26 Jun 2026). Renews 2026-07-25.
+
+### Cloudflare context (stop going in circles on this)
+- missingcash.com.au is proxied through a **Cloudflare Worker** at `missingcash.jmorganegypt.workers.dev` → points to the Replit deployed app URL.
+- This is for INCOMING traffic routing only. It has nothing to do with outbound scraping of MoneySmart.
+- MoneySmart is also Cloudflare-protected. The fix for scraping it is `stealth_proxy: true` in ScrapingBee (done). Do not chase Cloudflare credentials or codes — they are irrelevant to the scraping problem.
+
+---
+
 ## Project Overview
 Australian unclaimed money search service (missingcash.com.au). Mia is a site-wide AI assistant that searches 13 government databases. Revenue model: fee paid upfront via Stripe before claim details are revealed (5%–33% sliding scale based on amount found). Stratton Finance (Erin Crofton, Wanneroo WA) is a partner for high-value prospects who can't afford the fee upfront.
 
