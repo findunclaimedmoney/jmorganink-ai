@@ -154,6 +154,15 @@ export const pageViewsTable = pgTable("page_views", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const miaMemoriesTable = pgTable("mia_memories", {
+  sessionId: text("session_id").primaryKey(),
+  email: text("email"),
+  memories: text("memories").notNull().default(""),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export type MiaMemory = typeof miaMemoriesTable.$inferSelect;
+
 export const autoSearchResultsTable = pgTable("auto_search_results", {
   id: serial("id").primaryKey(),
   sourceTable: text("source_table").notNull(),

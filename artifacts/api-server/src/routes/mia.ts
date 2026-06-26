@@ -6,6 +6,7 @@ import { ilike, and, or } from "drizzle-orm";
 import { MiaChatBody } from "@workspace/api-zod";
 import { MIA_SYSTEM_PROMPT, MIA_SEARCH_TOOL, MIA_LOOKUP_TOOL, getMiaFallback } from "../lib/mia-knowledge";
 import { searchAllSources } from "../lib/multi-scraper";
+import { loadMemory, saveMemory } from "../lib/mia-memory";
 
 const router: IRouter = Router();
 
@@ -184,6 +185,23 @@ router.post("/mia/chat", rateLimit, async (req, res): Promise<void> => {
     return;
   }
 
+  const sessionId = ((req.body as Record<string, unknown>).sessionId as string | undefined) ?? "";
+
+  // Load memories for this session (non-blocking if empty)
+  const existingMemory = sessionId ? await loadMemory(sessionId) : "";
+
+  // Build system prompt — inject memories if we have any
+  const systemPrompt = existingMemory
+    ? `${MIA_SYSTEM_PROMPT}\n\n---\n\n## What Mia remembers about this person\n${existingMemory}\n\nUse these memories naturally — greet them by name if known, reference past searches without being asked. Don't recite the list — just let it inform how you speak to them.`
+    : MIA_SYSTEM_PROMPT;
+
+  // After response finishes, fire-and-forget memory extraction
+  if (sessionId) {
+    res.on("finish", () => {
+      void saveMemory(sessionId, parsed.data.messages, existingMemory);
+    });
+  }
+
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -222,7 +240,7 @@ router.post("/mia/chat", rateLimit, async (req, res): Promise<void> => {
     res.on("close", () => controller.abort());
 
     const baseMessages: { role: "system" | "user" | "assistant"; content: string }[] = [
-      { role: "system", content: MIA_SYSTEM_PROMPT },
+      { role: "system", content: systemPrompt },
       ...parsed.data.messages,
     ];
 

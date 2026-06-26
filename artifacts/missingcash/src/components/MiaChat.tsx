@@ -9,6 +9,21 @@ interface Message {
 }
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+function getMiaSessionId(): string {
+  try {
+    const key = "mia-session-id";
+    const existing = localStorage.getItem(key);
+    if (existing) return existing;
+    const id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+    return id;
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
+const MIA_SESSION_ID = getMiaSessionId();
 const AVATAR = `${import.meta.env.BASE_URL}mia-avatar.png`;
 const AVATAR_VIDEOS = [
   `${import.meta.env.BASE_URL}mia-welcome.mp4`,
@@ -312,6 +327,7 @@ export default function MiaChat() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             messages: history.map((m) => ({ role: m.role, content: m.content })),
+            sessionId: MIA_SESSION_ID,
           }),
           signal: controller.signal,
         });
