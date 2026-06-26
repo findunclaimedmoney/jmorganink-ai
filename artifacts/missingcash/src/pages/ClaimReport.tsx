@@ -62,8 +62,11 @@ export default function ClaimReport() {
     if (!pid) { setError("Invalid link — no record ID found."); setLoading(false); return; }
     const url = `${BASE}api/claim-report?pid=${pid}${sessionId ? `&session_id=${encodeURIComponent(sessionId)}` : ""}`;
     fetch(url)
-      .then((r) => r.json() as Promise<ClaimData>)
-      .then((d) => { setData(d); setLoading(false); })
+      .then(async (r) => {
+        if (!r.ok) { setError("Record not found. This link may be invalid or expired."); setLoading(false); return; }
+        const d = await r.json() as ClaimData;
+        setData(d); setLoading(false);
+      })
       .catch(() => { setError("Could not load your report. Please email support@missingcash.com.au."); setLoading(false); });
   }, [pid, sessionId]);
 

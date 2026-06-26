@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout/Layout";
-import VideoSplash from "@/components/VideoSplash";
 
 import Home from "@/pages/Home";
 import Crypto from "@/pages/Crypto";
@@ -81,25 +80,8 @@ function Router() {
 }
 
 function App() {
-  const [showSplash, setShowSplash] = useState(() => {
-    try {
-      if (window.location.pathname.includes("/admin")) return false;
-      const forceIntro = new URLSearchParams(window.location.search).get("intro") === "1";
-      if (forceIntro) return true;
-      return !localStorage.getItem("mc_intro_seen");
-    } catch {
-      return false;
-    }
-  });
-
-  function handleSplashDone() {
-    try { localStorage.setItem("mc_intro_seen", "1"); } catch {}
-    setShowSplash(false);
-  }
-
   return (
     <TooltipProvider>
-      {showSplash && <VideoSplash onDone={handleSplashDone} />}
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <PageViewBeacon />
         <Router />
