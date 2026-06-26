@@ -7,6 +7,14 @@ import { logger } from "./logger";
 import { findContact, parseName } from "./contact-finder";
 
 const SCRAPINGBEE_API = "https://app.scrapingbee.com/api/v1/";
+
+const BROWSER_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+  "Accept-Language": "en-AU,en;q=0.9",
+  "Cache-Control": "no-cache",
+  "Pragma": "no-cache",
+};
 const MAX_PAGES = 60;
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -20,33 +28,75 @@ const FROM_ADDRESS =
 
 // ---------- scraping helpers ----------
 
-async function fetchPage(url: string, apiKey: string): Promise<string> {
+function hasTableData(html: string): boolean {
+  return /<td/i.test(html) || /no results found|no records found|0 results/i.test(html);
+}
+
+async function fetchDirect(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, {
+      headers: BROWSER_HEADERS,
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+    return hasTableData(html) ? html : null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchViaScrapingBee(url: string, apiKey: string, renderJs: boolean): Promise<string | null> {
   const params = new URLSearchParams({
     api_key: apiKey,
     url,
-    render_js: "true",
-    premium_proxy: "true",
+    render_js: renderJs ? "true" : "false",
     block_ads: "true",
     country_code: "au",
-    wait: "5000",
+    ...(renderJs ? { wait_browser: "networkidle2", timeout: "15000" } : {}),
   });
 
-  let lastErr: Error | null = null;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const res = await fetch(`${SCRAPINGBEE_API}?${params.toString()}`, {
-        signal: AbortSignal.timeout(60_000),
+        signal: AbortSignal.timeout(90_000),
       });
       if (res.status === 404) return res.text();
-      if (!res.ok) throw new Error(`ScrapingBee ${res.status}`);
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        throw new Error(`ScrapingBee ${res.status}${errBody ? `: ${errBody.slice(0, 120)}` : ""}`);
+      }
       return res.text();
     } catch (err) {
-      lastErr = err instanceof Error ? err : new Error(String(err));
-      logger.warn({ url, attempt, err: lastErr.message }, "alphabet-scraper: fetch attempt failed, retrying");
-      if (attempt < 3) await new Promise((r) => setTimeout(r, 3000 * attempt));
+      const msg = err instanceof Error ? err.message : String(err);
+      logger.warn({ url, attempt, renderJs, err: msg }, "alphabet-scraper: ScrapingBee attempt failed");
+      if (attempt < 3) await new Promise((r) => setTimeout(r, 4000 * attempt));
     }
   }
-  throw lastErr!;
+  return null;
+}
+
+async function fetchPage(url: string, apiKey: string): Promise<string> {
+  // Tier 1: free direct fetch (works if the page does SSR)
+  const direct = await fetchDirect(url);
+  if (direct) {
+    logger.info({ url }, "alphabet-scraper: fetched direct (no ScrapingBee)");
+    return direct;
+  }
+
+  // Tier 2: ScrapingBee without JS rendering (faster, cheaper, fewer 500s)
+  const noJs = await fetchViaScrapingBee(url, apiKey, false);
+  if (noJs && hasTableData(noJs)) {
+    logger.info({ url }, "alphabet-scraper: fetched via ScrapingBee (no JS)");
+    return noJs;
+  }
+
+  // Tier 3: ScrapingBee with full JS rendering (most expensive, last resort)
+  logger.info({ url }, "alphabet-scraper: falling back to ScrapingBee with JS rendering");
+  const withJs = await fetchViaScrapingBee(url, apiKey, true);
+  if (withJs) return withJs;
+
+  throw new Error(`All fetch tiers failed for ${url}`);
 }
 
 interface RawMatch {
