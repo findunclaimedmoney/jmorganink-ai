@@ -2,3 +2,4 @@
 - [Prod DB via Publish](missingcash-prod-database.md) — prod DB connected through the Publish flow (verified working: finance lead writes + email live); never script prod migrations; re-publish to ship code/schema.
 - [Finance lead emails (Resend)](missingcash-resend-leads.md) — lensflow.com.au verified & sending in prod (emailSent:true); branded missingcash sender + Erin CC gated behind verifying missingcash.com.au + MISSINGCASH_DOMAIN_VERIFIED=true.
 - [Always update Mia's brain](mia-brain-rule.md) — standing rule: every new feature, DB count change, or scraper update must be reflected in mia-knowledge.ts (system prompt + tool description).
+- [MoneySmart crawl strategy](moneysmart-crawl-strategy.md) — NEVER search by single letter (?name=A) — blocked as bot. Always search by full surname per letter. Surname list is in SURNAMES_BY_LETTER constant in alphabet-scraper.ts, hand-curated, static.

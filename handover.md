@@ -49,6 +49,11 @@ Emails `admin@missingcash.com.au` every morning at 00:00 UTC (08:00 AWST) via Re
 
 **Credit usage:** ~3 ScrapingBee credits per prospect. Cap: `MAX_CONTACTS_PER_LETTER` (default 300).
 
+**⚠️ CRITICAL — How MoneySmart is crawled (do NOT change this without understanding it):**
+MoneySmart blocks single-letter searches (e.g. `?name=A`) as bot traffic — returns 500 error. The pipeline does NOT search by letter. Instead, it searches by **10 common Australian surnames per letter** (e.g. for A: Anderson, Adams, Allen, Armstrong, Andrews, Alexander, Abbott, Ahmed, Ali, Atkinson). Each surname search looks like a real human search and gets through fine.
+
+The surname lists live in `artifacts/api-server/src/lib/alphabet-scraper.ts` in the `SURNAMES_BY_LETTER` constant — one array per letter, A–Z. Currently 10 surnames per letter. To improve coverage, add more surnames to each array. To add a new letter's surnames, add a new key to the object. The list was hand-curated based on the most common Australian surnames per letter — it does NOT auto-generate at runtime.
+
 ---
 
 ### 3. New Database Tables
